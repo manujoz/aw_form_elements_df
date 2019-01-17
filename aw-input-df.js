@@ -1,0 +1,623 @@
+import { PolymerElement, html } 		from "/node_modules/aw_polymer_3/polymer/polymer-element.js";
+import { AwInputErrorMixin } 			from '/node_modules/aw_form_mixins/aw-input-error-mixin.js';
+import { AwInputCharCounterMixin } 		from '/node_modules/aw_form_mixins/aw-char-counter-mixin.js';
+import { AwInputPrefixMixin } 			from '/node_modules/aw_form_mixins/aw-input-preffix-mixin.js';
+import { AwFormValidateMixin } 			from '/node_modules/aw_form_mixins/aw-form-validate-mixin.js';
+import { AwExternsFunctionsMixin } 		from '/node_modules/aw_extern_functions/aw-extern-functions-mixin.js';
+
+import "/node_modules/aw_form_helpers/aw-input-error.js";
+import "/node_modules/aw_form_helpers/aw-char-counter.js";
+import "/node_modules/aw_form_helpers/aw-input-datalist.js";
+
+class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement ))))) {
+	static get template() {
+		return html`
+			<style>
+				:host {
+					position: relative;
+					width: 100%;
+					padding: 0 0 12px 0;
+					margin: 0;
+                	font-family: var(--aw-input-font-family, "arial");
+					display: inline-block;
+				}
+
+				/* #region Generales */
+
+				.hidden, [hidden] {
+					display: none;
+				}
+
+				/* #region Etiqueta del input */
+
+				#label {
+					position: relative;
+					color: var(--aw-input-label-color,#888888);
+					font-size: var(--aw-input-label-font-size,11px);
+					font-weight: var(--aw-input-label-font-weight,normal);
+					margin: var(--aw-input-label-margin,0);
+					padding: var(--aw-input-label-padding,0);
+					transition: color .2s;
+				}
+				#label[writted] {
+					color: var(--aw-input-label-color-writted,var(--aw-input-label-color,#888888));
+				}
+				#label[focused] {
+					color: var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD));
+				}
+				#label[error] {
+					color: var(--aw-input-label-color-error,var(--aw-error-color,#b13033));
+				}
+				#label[disabled] {
+					color: var(--aw-input-label-color-disabled,var(--aw-input-color-disabled,#1C7CDD));
+				}
+
+				/* #region Input visible */
+
+				.container {
+					position: relative;
+				}
+
+				.container input {
+					width: 100%;
+					color: var(--aw-input-color,#333333);
+					background-color: var(--aw-input-background-color,transparent);
+					border: var(--aw-input-border,solid 1px #CCCCCC);
+					border-radius: var(--aw-input-border-radius,2px);
+					padding: var(--aw-input-padding,7px);
+                	font-family: var(--aw-input-font-family, "arial");
+                	font-size: var(--aw-input-font-size, 16px);
+					font-weight: var(--aw-input-font-weight,normal);
+					font-style: var(--aw-input-font-style,normal);
+					box-shadow: var(--aw-input-box-shadow,none);
+					-webkit-box-sizing: border-box;
+					-moz-box-sizing: border-box;
+					-ms-box-sizing: border-box;
+					box-sizing: border-box;
+					transition: all .2s;
+				}
+				.container input:focus{
+                	outline: 0;
+					border: var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD));
+				}
+				.container input[error]{
+					border: var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033));
+				}
+				.container input[disabled]{
+					color: var(--aw-input-color-disabled, #BBBBBB) !important;
+				}
+				.container input:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0px 1000px white inset !important;
+					-webkit-text-fill-color: var(--aw-input-color, #111111);
+				}
+				.container input::-webkit-input-placeholder {
+					color: var(--aw-input-placeholder-color,#999999);
+					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
+					font-style: var(--aw-input-placeholder-font-style,oblique);
+				}
+				.container input::-moz-placeholder {
+					color: var(--aw-input-placeholder-color,#999999);
+					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
+					font-style: var(--aw-input-placeholder-font-style,oblique);
+				}
+				.container input::-ms-input-placeholder {
+					color: var(--aw-input-placeholder-color,#999999);
+					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
+					font-style: var(--aw-input-placeholder-font-style,oblique);
+				}
+				.container input::-o-input-placeholder {
+					color: var(--aw-input-placeholder-color,#999999);
+					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
+					font-style: var(--aw-input-placeholder-font-style,oblique);
+				}
+				.container input::-ms-reveal, input::-ms-clear {
+					display: none !important;
+				}
+				.container input[nospinners]::-webkit-outer-spin-button,
+				.container input[nospinners]::-webkit-inner-spin-button {
+					-webkit-appearance: none;
+					margin: 0;
+				}
+				.container input[nospinners] {
+					-moz-appearance:textfield;
+				}
+
+				/* #region Prefix y suffix */
+
+				.prefix {
+					position: absolute;
+					top: 10px;
+					left: 0px;
+					padding-top: var(--aw-input-prefix-padding-top,3px);
+					color: var(--aw-input-prefix-color,#777777);
+					font-family: var(--aw-input-prefix-font-famlily,var(--aw-input-font-family, "arial"));
+					font-size: var(--aw-input-prefix-font-size,var(--aw-input-font-size, 16px));
+					font-weight: var(--aw-input-prefix-font-weight, bold);
+					transition: all .2s;
+					opacity: 0;
+				}
+				.suffix {
+					position: absolute;
+					top: 10px;
+					right: 0px;
+					padding-top: var(--aw-input-prefix-padding-top,3px);
+					color: var(--aw-input-prefix-color,#777777);
+					font-family: var(--aw-input-prefix-font-famlily,var(--aw-input-font-family, "arial"));
+					font-size: var(--aw-input-prefix-font-size,var(--aw-input-font-size, 16px));
+					font-weight: var(--aw-input-prefix-font-weight, bold);
+					transition: all .2s;
+					opacity: 0;
+				}
+				.container[focused] .prefix,.container[focused] .suffix {
+					color: var(--aw-input-prefix-color-focused,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
+				}
+				.container[error] .prefix,.container[error] .suffix {
+					color: var(--aw-input-prefix-color-error,var(--aw-input-label-color-error,var(--aw-error-color,#b13033)));
+				}
+				.prefix[show],.suffix[show] {
+					opacity: 1;
+				}
+				.prefix > img {
+					padding: 0px 3px 0px 0px;
+					height: var(--aw-input-prefix-image-height,var(--aw-input-font-size, 16px));
+					margin-bottom: 3px;
+				}
+				.suffix > img {
+					padding: 0px 0px 0px 3px;
+					height: var(--aw-input-prefix-image-height,var(--aw-input-font-size, 16px));
+					margin-bottom: 3px;
+				}
+				.prefix > iron-icon, .suffix > iron-icon {
+					fill: var(--aw-input-prefix-color,#555555);
+					width: 22px;
+					height: 22px;
+					padding: 0px;
+					transition: fill .2s;
+				}
+				.container[focused] .prefix > iron-icon,.container[focused] .suffix > iron-icon {
+					fill: var(--aw-input-prefix-color-focused,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
+				}
+				.container[error] .prefix > iron-icon,.container[error] .suffix > iron-icon {
+					fill: var(--aw-input-prefix-color-error,var(--aw-input-label-color-error,var(--aw-error-color,#b13033)));
+				}
+				:host([disabled]) .prefix, :host([disabled]) .suffix {
+					color: var(--aw-input-prefix-color-disabled,var(--aw-input-color-disabled, #BBBBBB));
+					bottom: 1px;
+				}
+				:host([disabled]) .prefix > iron-icon, :host([disabled]) .suffix > iron-icon {
+					fill: var(--aw-input-prefix-color-disabled,var(--aw-input-color-disabled, #BBBBBB));
+				}
+
+				/* #region Flexible de error y contador */
+
+				.flex_inf {
+					position: relative;
+					display: flex;
+					flex: row wrap;
+				}
+
+				.flex_inf > .left {
+					position: relative;
+					flex-grow: 1;
+					flex-basis: auto;
+				}
+
+				.flex_inf > .right {
+					position: relative;
+					flex-grow: 0;
+					flex-basis: auto;
+				}
+			</style>
+			<div id="container" class="container">
+				<div id="label" hidden="{{!label}}">{{label}}</div>
+				<label><input
+					id$="[[id]]"
+					name$="[[name]]"
+					type$="[[type]]"
+					placeholder="[[placeholder]]"
+					minlength$="[[minlength]]"
+					maxlength$="[[maxlength]]"
+					min$="[[min]]"
+					max$="[[max]]"
+					step$="[[step]]"
+					value$="{{value}}"
+					readonly$="[[readonly]]"
+					disabled$="[[disabled]]"
+					autocapitalize$="[[autocapitalize]]"
+					autocorrect$="[[autocorrect]]"
+					autocomplete$="[[autocomplete]]"
+
+					required$="[[required]]"
+					nospaces$="[[nospaces]]"
+					rangelength$="[[rangelength]]"
+					isumber$="[[isumber]]"
+					range$="[[range]]"
+					isemail$="[[isemail]]"
+					isurl$="[[isurl]]"
+					domains$="[[domains]]"
+					isdate$="[[isdate]]"
+					dateprevius$="[[dateprevius]]"
+					minage$="[[minage]]"
+					maxage$="[[maxage]]"
+					security$="[[security]]"
+					equalto$="[[equalto]]"
+					phonenumber$="[[phonenumber]]"
+					phonecountry$="[[phonecountry]]"
+					pattern$="[[pattern]]"
+					novalidate$=[[novalidate]]
+
+					error$=[[error]]
+					errmsg$="{{errmsg}}"
+
+					on-focusin="_focusin"
+					on-focusout="_focusout"
+					on-keyup="_keyup"
+					on-keypress="_keypress"
+					on-change="_change"
+					/></label>
+			</div>
+			<div class="flex_inf">
+				<div class="left">
+					<aw-input-error>{{errmsg}}</aw-input-error>
+				</div>
+				<div class="right">
+					<aw-char-counter hidden="{{!countchar}}">{{countCharStr}}</aw-char-counter>
+				</div>
+			</div>
+
+			<template id="datalist" is="dom-if" if="{{datalist}}">
+				<aw-input-datalist input="{{inputElement}}" datalist="{{datalist}}" dlvisible="{{dlvisible}}"></aw-input-datalist>
+			</template>
+			<slot name="datalist"></slot>
+		`;
+	}
+
+	static get properties() {
+		return {
+			// Atributos del componente
+
+			inputElement: { type: Object },
+			autofocus: { type: Boolean, value: false },
+
+			// Atributos básicos del input
+
+			id: { type: String },
+			name: { type: String },
+			type: { type: String },
+			placeholder: { type: String },
+			minlength: { type: Number },
+			maxlength: { type: Number },
+			min: { type: Number },
+			max: { type: Number },
+			step: { type: String },
+			value: { type: String },
+			readonly: { type: String },
+			disabled: { type: String },
+			autocapitalize: { type: String },
+			autocorrect: { type: String },
+			autocomplete: { type: String },
+
+			// Atributos de diseño
+
+			label: { type: String },
+			noarrows: { type: Boolean, value: false },
+			autofocus: { type: Boolean, value: false },
+			spinners: { type: Boolean, value: false },
+
+			// Atrtibutos de validación
+
+			required: { type: Boolean, value: false },
+			nospaces: { type: String },
+			rangelength: { type: String },
+			isumber: { type: Boolean, value: false },
+			range: { type: String },
+			isemail: { type: Boolean, value: false },
+			isurl: { type: Boolean, value: false },
+			domains: { type: String },
+			isdate: { type: String },
+			dateprevius: { type: Boolean, value: false },
+			minage: { type: String },
+			maxage: { type: String },
+			security: { type: String },
+			equalto: { type: String },
+			phonenumber: { type: Boolean, value: false },
+			phonecountry: { type: String },
+			pattern: { type: String },
+			novalidate: { type: Boolean, value: false },
+			validateonchange: { type: Boolean, value: false },
+
+			// Datalist
+
+			list: { type: String },
+			datalist: { type: Object, notify: true },
+			dlvisible: { type: Boolean, value: false, notify: true },
+			observDl: { type: Object },
+
+			// Relación con el aw-form y el form
+
+			parentForm: Object,
+			noregister: { type: Boolean, value: false }
+		};
+	}
+
+	/**
+	 * @method	connectedCallback
+	 * 
+	 * Realiza las operaciones al conectar el componente.
+	 */
+	connectedCallback() {
+		super.connectedCallback();
+
+		// Asignamos el input
+
+		this.inputElement = this.shadowRoot.querySelector( "input" );
+
+		// Inicializamos el componente
+
+		this._init();
+
+		// Activamos los errores
+
+		this.error_listen();
+
+		// Activamos el countchar
+
+		this.set_countchar();
+
+		// Ponemos el datalist
+
+		this._set_datalist();
+		
+		// Buscamos prefixs y suffixs
+
+		this.findPrefixAndSuffixs();
+
+		// Registramos en el formulario.
+
+		this._register_in_form();
+
+		// Invocamos la función externa connected
+
+		if ( typeof this.connectedfunc === "function" ) {
+			this.connectedfunc( this );
+		}
+
+		// Resolvemos
+
+		this.removeAttribute( "unresolved" );
+	}
+
+	/**
+	 * @method	disconnectedCallback
+	 * 
+	 * Realiza las operaciones necesarias al desconectar el componente.
+	 */
+	disconnectedCallback(){
+		super.disconnectedCallback();
+
+		// Quitamos el elemento del registro
+
+		if( !this.noregister && this.parentForm ) {
+			this.parentForm._unregister_element( this.inputElement );
+		}
+
+		// Dejamos de observar los cambios en el datalist
+
+		if ( this.dataList ) {
+			this.observDl.disconnect();
+		}
+	}
+
+	/**
+	 * @method	_init
+	 * 
+	 * Inicializa el componente una vez se ha conectado.
+	 */
+	_init() {
+		//  Ajustamos el type del input
+		// . . . . . . . . . . . . . . . . . . . . .
+
+		if ( this.type !== "text" && this.type !== "number" && this.type !== "password" && this.type !== "email" && this.type !== "url" && this.type !== "date" ) {
+			this.type = "text";
+		}
+
+		//  Quitamos los spinners
+		// . . . . . . . . . . . . . . . . . . . . .
+
+		if( !this.spinners && this.type === "number" ) {
+			this.inputElement.setAttribute( "nospinners", "" );
+		}
+
+		//  Ponemos el autofocus
+		// . . . . . . . . . . . . . . . . . . . . . 
+		
+		if( this.autofocus ) {
+			setTimeout(() => {
+				this.inputElement.focus();
+			},100);
+		}
+
+		//  Si hay valor
+		// . . . . . . . . . . . . . . . . . . . . . 
+		
+		if( this.value ) {
+			this._keyup();
+		}
+	}
+
+	/**
+	 * @method	_set_datalist
+	 * 
+	 * Configura el datalist del input si existe.
+	 */
+	_set_datalist() {
+		if( this.list ) {
+			let dlSlot = this.shadowRoot.querySelector( "slot[name=datalist]" );
+			this.datalist = dlSlot.assignedNodes()[ 0 ];
+			
+			if( this.datalist.options.length > 0 || this.activelist ) {
+				this.inputElement.classList.add( "datalist" );
+				
+				this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
+				this.observDl.observe( this.datalist, { childList: true } );
+			} else {
+				this.datalist = false;
+			}
+		}
+	}
+
+	/**
+	 * @method	_observe_datalist
+	 * 
+	 * Obserca los cambios en el datalist
+	 */
+	_observe_datalist( ev ) {
+		// Obtenemos el viejo datalist.
+
+		var oldDatalist = ev[ 0 ].target;
+		
+		// Creamos el nuevo datalist
+
+		var newDatalist = document.createElement( "DATALIST" );
+		for( var i = 0; i < this.datalist.attributes.length; i++ ) {
+			newDatalist.setAttribute( this.datalist.attributes[ i ].name, this.datalist.attributes[ i ].value );
+		}
+
+		newDatalist.innerHTML = this.datalist.innerHTML;
+		
+		// Asignamos el nuevo datalist.
+
+		this.datalist = newDatalist;
+
+		this.removeChild( oldDatalist );
+		this.appendChild( this.datalist );
+
+		// Volvemos a poner a la escucha el nuevo datalist.
+
+		this.observDl.disconnect();
+		this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
+		this.observDl.observe( this.datalist, { childList: true } );
+	}
+
+	/**
+	 * @method	_register_in_form
+	 * 
+	 * Registra el elemento en el formulario.
+	 */
+	_register_in_form() {
+		// Si no debe registrarse
+
+		if( this.noregister ) {
+			return false;
+		}
+
+		// Registramos el elemento
+
+		this.dispatchEvent(new CustomEvent('aw-form-element-register', { detail: this, bubbles: true, composed: true }));
+	}
+
+	/**
+	 * @method	_focusin
+	 * 
+	 * Acciones a realizar cuando se hace focus sobre el input.
+	 */
+	_focusin( ev ) {
+		super._focusin();
+
+		this.$.label.setAttribute( "focused", "" );
+		this.$.container.setAttribute( "focused", "" );
+
+		// Invocamos la función externa focusin
+
+		if ( typeof this.focusinfunc === "function" ) {
+			this.focusinfunc( this.inputElement );
+		}
+	}
+
+	/**
+	 * @method	_focusout
+	 * 
+	 * Acciones a realizar cuando se quita el focus del input.
+	 */
+	_focusout( ev ) {
+		super._focusout();
+
+		// Quitamos el label focused
+
+		this.$.label.removeAttribute( "focused" );
+		this.$.container.removeAttribute( "focused" );
+
+		// Invocamos la función externa focusout
+
+		if ( typeof this.focusoutfunc === "function" ) {
+			this.focusoutfunc( this.inputElement );
+		}
+	}
+
+	/**
+	 * @method	_keypress
+	 * 
+	 * Acciones a realizar cuando se presiona una tecla sobre el input.
+	 */
+	_keypress( ev ) {
+		// Invocamos la función externa keypress
+
+		if ( typeof this.keypressfunc === "function" ) {
+			this.keypressfunc( this.inputElement );
+		}
+	}
+
+	/**
+	 * @method	_keyup
+	 * 
+	 * Acciones a realizar cuando se levanta una tecla sobre el input.
+	 */
+	_keyup( ev ) {
+		super._keyup();
+	
+		// Invocamos la función externa keyup
+
+		if ( typeof this.keyupfunc === "function" ) {
+			this.keyupfunc( this.inputElement );
+		}
+
+		// Submitimos el formulario al pulsar intro
+
+		if( ev && ev.keyCode === 13 && this.parentForm && !this.dlvisible ) {
+			this.parentForm.submit();
+		}
+	}
+
+	/**
+	 * @method	_change
+	 * 
+	 * Acciones a realizar cuando se realiza un cambio en el input.
+	 */
+	_change( ev ) {
+		// Invocamos la función externa de change change
+
+		if ( typeof this.changefunc === "function" ) {
+			this.changefunc( this.inputElement );
+		}
+
+		// Si el input tiene el atributo "novalidate" o no tiene el validateonchange, no se valida
+
+		if ( this.novalidate ) {
+			return false;
+		}
+
+		if ( !this.validateonchange ) {
+			return false;
+		}
+
+		if ( this.parentForm && this.parentForm.novalidate ) {
+			return false;
+		}
+
+		// Validamos el campo
+
+		this.__errorValidateInput( this.inputElement );
+	}
+}
+
+window.customElements.define( "aw-input-df", AwInputDf );
