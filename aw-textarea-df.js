@@ -1,15 +1,10 @@
-import { PolymerElement, html } 		from "../aw_polymer_3/polymer/polymer-element.js";
-import { AwInputErrorMixin } 			from "../aw_form_mixins/aw-input-error-mixin.js";
-import { AwInputCharCounterMixin } 		from "../aw_form_mixins/aw-char-counter-mixin.js";
-import { AwInputPrefixMixin } 			from "../aw_form_mixins/aw-input-preffix-mixin.js";
-import { AwFormValidateMixin } 			from "../aw_form_mixins/aw-form-validate-mixin.js";
-import { AwExternsFunctionsMixin } 		from "../aw_extern_functions/aw-extern-functions-mixin.js";
+import { PolymerElement, html, Polymer } 	from "../aw_polymer_3/polymer/polymer-element.js";
+import { AwInputErrorMixin } 				from "../aw_form_mixins/aw-input-error-mixin.js";
+import { AwInputCharCounterMixin } 			from "../aw_form_mixins/aw-char-counter-mixin.js";
+import { AwFormValidateMixin } 				from "../aw_form_mixins/aw-form-validate-mixin.js";
+import { AwExternsFunctionsMixin } 			from "../aw_extern_functions/aw-extern-functions-mixin.js";
 
-import "../aw_form_helpers/aw-input-error.js";
-import "../aw_form_helpers/aw-char-counter.js";
-import "../aw_form_helpers/aw-input-datalist.js";
-
-class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement ))))) {
+class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormValidateMixin ( AwExternsFunctionsMixin ( PolymerElement )))) {
 	static get template() {
 		return html`
 			<style>
@@ -57,7 +52,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 				.container {
 					position: relative;
 				}
-				.container input {
+				.container textarea {
 					width: 100%;
 					margin: 0;
 					color: var(--aw-input-color,#333333);
@@ -75,118 +70,61 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					-ms-box-sizing: border-box;
 					box-sizing: border-box;
 					transition: all .2s;
+					resize: none;
+					vertical-align: top;
 				}
-				.container input:focus{
+				.container textarea:focus{
                 	outline: 0;
 					border: var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD));
 				}
-				.container input[error]{
+				.container textarea[error]{
 					border: var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033));
 				}
-				.container input[disabled]{
+				.container textarea[disabled]{
 					color: var(--aw-input-color-disabled, #BBBBBB);
 					border: var(--aw-input-border-disabled,solid 1px #DDDDDD);
 					background-color: var(--aw-input-background-color-disabled,#F9F9F9);
 				}
-				.container input:-webkit-autofill {
+				.container textarea::-webkit-scrollbar {
+					width: 8px;
+					height: 8px;
+					background-color: #f0f0f0;
+				}
+				.container textarea::-webkit-scrollbar-track {
+					background-color: #f0f0f0;
+				}
+				.container textarea::-webkit-scrollbar-thumb {
+					background-color: #bbbbbb;
+				}
+				.container textarea::-webkit-scrollbar-thumb:hover {
+					background-color: #999999;
+				}
+				.container textarea:-webkit-autofill {
 					-webkit-box-shadow: 0 0 0px 1000px white inset !important;
 					-webkit-text-fill-color: var(--aw-input-color, #111111);
 				}
-				.container input::-webkit-input-placeholder {
+				.container textarea::-webkit-input-placeholder {
 					color: var(--aw-input-placeholder-color,#999999);
 					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
 					font-style: var(--aw-input-placeholder-font-style,oblique);
 				}
-				.container input::-moz-placeholder {
+				.container textarea::-moz-placeholder {
 					color: var(--aw-input-placeholder-color,#999999);
 					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
 					font-style: var(--aw-input-placeholder-font-style,oblique);
 				}
-				.container input::-ms-input-placeholder {
+				.container textarea::-ms-input-placeholder {
 					color: var(--aw-input-placeholder-color,#999999);
 					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
 					font-style: var(--aw-input-placeholder-font-style,oblique);
 				}
-				.container input::-o-input-placeholder {
+				.container textarea::-o-input-placeholder {
 					color: var(--aw-input-placeholder-color,#999999);
 					font-family: var(--aw-input-placeholder-font-family,var(--aw-input-font-family, "arial"));
 					font-style: var(--aw-input-placeholder-font-style,oblique);
 				}
-				.container input::-ms-reveal, input::-ms-clear {
+				.container textarea::-ms-reveal, input::-ms-clear {
 					display: none !important;
-				}
-				.container input[nospinners]::-webkit-outer-spin-button,
-				.container input[nospinners]::-webkit-inner-spin-button {
-					-webkit-appearance: none;
-					margin: 0;
-				}
-				.container input[nospinners] {
-					-moz-appearance:textfield;
-				}
-
-				/* #region Prefix y suffix */
-
-				.prefix {
-					position: absolute;
-					top: 0px;
-					left: 0px;
-					padding-top: var(--aw-input-prefix-padding-top,0);
-					color: var(--aw-input-prefix-color,#777777);
-					font-family: var(--aw-input-prefix-font-famlily,var(--aw-input-font-family, "arial"));
-					font-size: var(--aw-input-prefix-font-size,var(--aw-input-font-size, 16px));
-					font-weight: var(--aw-input-prefix-font-weight, bold);
-					transition: all .2s;
-					opacity: 0;
-				}
-				.suffix {
-					position: absolute;
-					top: 0px;
-					right: 0px;
-					padding-top: var(--aw-input-prefix-padding-top,0);
-					color: var(--aw-input-prefix-color,#777777);
-					font-family: var(--aw-input-prefix-font-famlily,var(--aw-input-font-family, "arial"));
-					font-size: var(--aw-input-prefix-font-size,var(--aw-input-font-size, 16px));
-					font-weight: var(--aw-input-prefix-font-weight, bold);
-					transition: all .2s;
-					opacity: 0;
-				}
-				.container[focused] .prefix,.container[focused] .suffix {
-					color: var(--aw-input-prefix-color-focused,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
-				}
-				.container[error] .prefix,.container[error] .suffix {
-					color: var(--aw-input-prefix-color-error,var(--aw-input-label-color-error,var(--aw-error-color,#b13033)));
-				}
-				.prefix[show],.suffix[show] {
-					opacity: 1;
-				}
-				.prefix > img {
-					padding: 0px 3px 0px 0px;
-					height: var(--aw-input-prefix-image-height,var(--aw-input-font-size, 16px));
-					margin-bottom: 3px;
-				}
-				.suffix > img {
-					padding: 0px 0px 0px 3px;
-					height: var(--aw-input-prefix-image-height,var(--aw-input-font-size, 16px));
-					margin-bottom: 3px;
-				}
-				.prefix > iron-icon, .suffix > iron-icon {
-					fill: var(--aw-input-prefix-color,#555555);
-					width: 22px;
-					height: 22px;
-					padding: 0px;
-					transition: fill .2s;
-				}
-				.container[focused] .prefix > iron-icon,.container[focused] .suffix > iron-icon {
-					fill: var(--aw-input-prefix-color-focused,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
-				}
-				.container[error] .prefix > iron-icon,.container[error] .suffix > iron-icon {
-					fill: var(--aw-input-prefix-color-error,var(--aw-input-label-color-error,var(--aw-error-color,#b13033)));
-				}
-				:host([disabled]) .prefix, :host([disabled]) .suffix {
-					color: var(--aw-input-prefix-color-disabled,var(--aw-input-color-disabled, #BBBBBB));
-				}
-				:host([disabled]) .prefix > iron-icon, :host([disabled]) .suffix > iron-icon {
-					fill: var(--aw-input-prefix-color-disabled,var(--aw-input-color-disabled, #BBBBBB));
 				}
 
 				/* #region Flexible de error y contador */
@@ -211,51 +149,30 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			</style>
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
-				<label><input
+				<label><textarea
 					id$="[[id]]"
 					name$="[[name]]"
-					type$="[[type]]"
+					rows$="[[rows]]" 
 					placeholder="[[placeholder]]"
 					minlength$="[[minlength]]"
 					maxlength$="[[maxlength]]"
-					min$="[[min]]"
-					max$="[[max]]"
-					step$="[[step]]"
-					value$="{{value}}"
 					readonly$="[[readonly]]"
 					disabled$="[[disabled]]"
 					autocapitalize$="[[autocapitalize]]"
 					autocorrect$="[[autocorrect]]"
 					autocomplete$="[[autocomplete]]"
-
+					
 					required$="[[required]]"
 					nospaces$="[[nospaces]]"
-					rangelength$="[[rangelength]]"
-					isumber$="[[isumber]]"
-					range$="[[range]]"
-					isemail$="[[isemail]]"
-					isurl$="[[isurl]]"
-					domains$="[[domains]]"
-					isdate$="[[isdate]]"
-					dateprevius$="[[dateprevius]]"
-					minage$="[[minage]]"
-					maxage$="[[maxage]]"
-					security$="[[security]]"
-					equalto$="[[equalto]]"
-					phonenumber$="[[phonenumber]]"
-					phonecountry$="[[phonecountry]]"
-					pattern$="[[pattern]]"
 					novalidate$=[[novalidate]]
 
-					error$=[[error]]
 					errmsg$="{{errmsg}}"
-
 					on-focusin="_focusin"
 					on-focusout="_focusout"
 					on-keyup="_keyup"
 					on-keypress="_keypress"
 					on-change="_change"
-					/></label>
+					>{{value}}</textarea></label>
 			</div>
 			<div class="flex_inf">
 				<div class="left">
@@ -265,79 +182,52 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					<aw-char-counter unresolved hidden="{{!countchar}}">{{countCharStr}}</aw-char-counter>
 				</div>
 			</div>
-
-			<template id="datalist" is="dom-if" if="{{datalist}}">
-				<aw-input-datalist input="{{inputElement}}" datalist="{{datalist}}" dlvisible="{{dlvisible}}"></aw-input-datalist>
-			</template>
-			<slot name="datalist"></slot>
 		`;
 	}
 
 	static get properties() {
 		return {
-			// Atributos del componente
+			// Elemento del input
 
-			inputElement: { type: Object },
+			inputElement: { type: Object, value: null },
 
 			// Atributos básicos del input
 
 			id: { type: String },
 			name: { type: String },
-			type: { type: String },
+			rows: { type: String, value: "1" },
 			placeholder: { type: String },
+			autocomplete: { type: String, value: "off" },
 			minlength: { type: Number },
 			maxlength: { type: Number },
-			min: { type: Number },
-			max: { type: Number },
-			step: { type: String },
 			value: { type: String },
+			autocorrect: String,
 			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
-            disabled: {type: Boolean, value: false, observer: "_set_disabled"},
-			autocapitalize: { type: String },
-			autocorrect: { type: String },
-			autocomplete: { type: String },
+			disabled: {type: Boolean, value: false, observer: "_set_disabled"},
 
-			// Atributos de diseño
-
-			label: { type: String },
-			noarrows: { type: Boolean, value: false },
-			autofocus: { type: Boolean, value: false },
-			spinners: { type: Boolean, value: false },
-
-			// Atrtibutos de validación
+			// Atributos de validación
 
 			required: { type: Boolean, value: false },
 			nospaces: { type: String },
-			rangelength: { type: String },
-			isumber: { type: Boolean, value: false },
-			range: { type: String },
-			isemail: { type: Boolean, value: false },
-			isurl: { type: Boolean, value: false },
-			domains: { type: String },
-			isdate: { type: String },
-			dateprevius: { type: Boolean, value: false },
-			minage: { type: String },
-			maxage: { type: String },
-			security: { type: String },
-			equalto: { type: String },
-			phonenumber: { type: Boolean, value: false },
-			phonecountry: { type: String },
-			pattern: { type: String },
 			novalidate: { type: Boolean, value: false },
 			validateonchange: { type: Boolean, value: false },
 
-			// Datalist
+			// Atributos de diseño
 
-			list: { type: String },
-			datalist: { type: Object, notify: true },
-			dlvisible: { type: Boolean, value: false, notify: true },
-			observDl: { type: Object },
+			label: { type: String, value: "" },
+			autofocus: { type: Boolean, value: false },
+
+			// Especiales del aw-textarea
+
+			noadjust: { type: Boolean, value: false },
+			maxheight: { type: Number, value: 0 },
 
 			// Relación con el aw-form y el form
 
-			parentForm: { type: Object },
+			parentForm: Object,
 			noregister: { type: Boolean, value: false }
 		};
+
 	}
 
 	/**
@@ -348,13 +238,17 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	connectedCallback() {
 		super.connectedCallback();
 
-		// Asignamos el input
+		// Asignamos el elemento
 
-		this.inputElement = this.shadowRoot.querySelector( "input" );
+		this.inputElement = this.shadowRoot.querySelector( "textarea" );
 
-		// Inicializamos el componente
+		// Inicializamos el componente.
 
 		this._init();
+
+		// Hacemos ajustable el textarea
+			
+		this._textarea_adjust();
 
 		// Activamos los errores
 
@@ -363,14 +257,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 		// Activamos el countchar
 
 		this.set_countchar();
-
-		// Ponemos el datalist
-
-		this._set_datalist();
-		
-		// Buscamos prefixs y suffixs
-
-		this.findPrefixAndSuffixs();
 
 		// Registramos en el formulario.
 
@@ -400,12 +286,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 		if( !this.noregister && this.parentForm ) {
 			this.parentForm._unregister_element( this.inputElement );
 		}
-
-		// Dejamos de observar los cambios en el datalist
-
-		if ( this.dataList ) {
-			this.observDl.disconnect();
-		}
 	}
 
 	/**
@@ -414,34 +294,28 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * Inicializa el componente una vez se ha conectado.
 	 */
 	_init() {
-		//  Ajustamos el type del input
-		// . . . . . . . . . . . . . . . . . . . . .
+		// Ponemos el value si viene dado.
+		
+		/*
+		NOTE: Desactivado de mommento a la espera de su necesidad.
+		
+		if ( this.value ) {
+			let eventKeyUp = new Event( "keyup" );
 
-		if ( this.type !== "text" && this.type !== "number" && this.type !== "password" && this.type !== "email" && this.type !== "url" && this.type !== "date" ) {
-			this.type = "text";
-		}
+			this.inputElement.value = this.value;
+			this.inputElement.dispatchEvent( eventKeyUp );
+			this.inputElement.blur();
+			this._keyup();
 
-		//  Quitamos los spinners
-		// . . . . . . . . . . . . . . . . . . . . .
-
-		if( !this.spinners && this.type === "number" ) {
-			this.inputElement.setAttribute( "nospinners", "" );
-		}
+			eventKeyUp = null;
+		}*/
 
 		//  Ponemos el autofocus
-		// . . . . . . . . . . . . . . . . . . . . . 
 		
 		if( this.autofocus && !this.readonly && !this.disabled ) {
 			setTimeout(() => {
 				this.focus();
 			},100);
-		}
-
-		//  Si hay valor
-		// . . . . . . . . . . . . . . . . . . . . . 
-		
-		if( this.value ) {
-			this._keyup();
 		}
 	}
 
@@ -482,58 +356,20 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
-	 * @method	_set_datalist
+	 * @method	_textarea_adjust
 	 * 
-	 * Configura el datalist del input si existe.
+	 * Pone el textarea como ajustable.
 	 */
-	_set_datalist() {
-		if( this.list ) {
-			let dlSlot = this.shadowRoot.querySelector( "slot[name=datalist]" );
-			this.datalist = dlSlot.assignedNodes()[ 0 ];
-			let options = this.datalist.querySelectorAll( "option" );
-			
-			if( options.length > 0 || this.activelist ) {
-				this.inputElement.classList.add( "datalist" );
-				
-				this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
-				this.observDl.observe( this.datalist, { childList: true } );
-			} else {
-				this.datalist = false;
-			}
+	_textarea_adjust() {
+		if( this.noadjust || !Polymer.TextareaAdjust ) {
+			return false;
 		}
-	}
-
-	/**
-	 * @method	_observe_datalist
-	 * 
-	 * Obserca los cambios en el datalist
-	 */
-	_observe_datalist( ev ) {
-		// Obtenemos el viejo datalist.
-
-		var oldDatalist = ev[ 0 ].target;
 		
-		// Creamos el nuevo datalist
-
-		var newDatalist = document.createElement( "DATALIST" );
-		for( var i = 0; i < this.datalist.attributes.length; i++ ) {
-			newDatalist.setAttribute( this.datalist.attributes[ i ].name, this.datalist.attributes[ i ].value );
+		if( this.maxheight > 0 ) {
+			Polymer.TextareaAdjust.init( this.inputElement, { maxHeight: this.maxheight } );
+		} else {
+			Polymer.TextareaAdjust.init( this.inputElement );
 		}
-
-		newDatalist.innerHTML = this.datalist.innerHTML;
-		
-		// Asignamos el nuevo datalist.
-
-		this.datalist = newDatalist;
-
-		this.removeChild( oldDatalist );
-		this.appendChild( this.datalist );
-
-		// Volvemos a poner a la escucha el nuevo datalist.
-
-		this.observDl.disconnect();
-		this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
-		this.observDl.observe( this.datalist, { childList: true } );
 	}
 
 	/**
@@ -558,7 +394,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * 
 	 * Acciones a realizar cuando se hace focus sobre el input.
 	 */
-	_focusin( ev ) {
+	_focusin() {
 		super._focusin();
 		
 		// Impedimos si es de solo lecutura o está desactivado.
@@ -568,12 +404,12 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			return false;
 		}
 
-		// Damos estilo de focus
+		// Ponemos el focusl a label
 
 		this.$.label.setAttribute( "focused", "" );
 		this.$.container.setAttribute( "focused", "" );
 
-		// Invocamos la función externa focusin
+		// Invocamos la función externa keyup
 
 		if ( typeof this.focusinfunc === "function" ) {
 			this.focusinfunc( this.inputElement );
@@ -585,7 +421,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * 
 	 * Acciones a realizar cuando se quita el focus del input.
 	 */
-	_focusout( ev ) {
+	_focusout() {
 		super._focusout();
 
 		// Quitamos el label focused
@@ -605,7 +441,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * 
 	 * Acciones a realizar cuando se presiona una tecla sobre el input.
 	 */
-	_keypress( ev ) {
+	_keypress() {
 		// Invocamos la función externa keypress
 
 		if ( typeof this.keypressfunc === "function" ) {
@@ -618,19 +454,13 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * 
 	 * Acciones a realizar cuando se levanta una tecla sobre el input.
 	 */
-	_keyup( ev ) {
+	_keyup() {
 		super._keyup();
 	
 		// Invocamos la función externa keyup
 
 		if ( typeof this.keyupfunc === "function" ) {
 			this.keyupfunc( this.inputElement );
-		}
-
-		// Submitimos el formulario al pulsar intro
-
-		if( ev && ev.keyCode === 13 && this.parentForm && !this.dlvisible ) {
-			this.parentForm.submit();
 		}
 	}
 
@@ -639,7 +469,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * 
 	 * Acciones a realizar cuando se realiza un cambio en el input.
 	 */
-	_change( ev ) {
+	_change() {
 		// Invocamos la función externa de change change
 
 		if ( typeof this.changefunc === "function" ) {
@@ -666,4 +496,4 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 }
 
-window.customElements.define( "aw-input-df", AwInputDf );
+window.customElements.define( "aw-textarea-df", AwTextareaDf );
