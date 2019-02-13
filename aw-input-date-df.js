@@ -1,15 +1,13 @@
-import { PolymerElement, html } 		from "../aw_polymer_3/polymer/polymer-element.js";
+import { PolymerElement, html, Polymer } 		from "../aw_polymer_3/polymer/polymer-element.js";
 import { AwInputErrorMixin } 			from "../aw_form_mixins/aw-input-error-mixin.js";
-import { AwInputCharCounterMixin } 		from "../aw_form_mixins/aw-char-counter-mixin.js";
 import { AwInputPrefixMixin } 			from "../aw_form_mixins/aw-input-preffix-mixin.js";
 import { AwFormValidateMixin } 			from "../aw_form_mixins/aw-form-validate-mixin.js";
 import { AwExternsFunctionsMixin } 		from "../aw_extern_functions/aw-extern-functions-mixin.js";
 
 import "../aw_form_helpers/aw-input-error.js";
-import "../aw_form_helpers/aw-char-counter.js";
-import "../aw_form_helpers/aw-input-datalist.js";
+import "../aw_calendar/aw-calendar-simple.js";
 
-class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement ))))) {
+class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement )))) {
 	static get template() {
 		return html`
 			<style>
@@ -20,6 +18,12 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					margin: 0;
                 	font-family: var(--aw-input-font-family, "arial");
 					display: inline-block;
+
+					--aw-calendar-icon-fill-hover: var(--aw-input-date-calendar-icon-fill-hover,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
+					--aw-calendar-selected-color: var(--aw-input-date-calendar-selected-color,white);
+					--aw-calendar-selected-background-color: var(--aw-input-date-calendar-selected-background-color,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
+					--aw-calendar-list-color-hover: var(--aw-input-date-calendar-tit-color,white);
+					--aw-calendar-list-background-color-hover: var(--aw-input-date-calendar-tit-background-color,var(--aw-primary-color,#1C7CDD));
 				}
 
 				/* #region Generales */
@@ -80,7 +84,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
                 	outline: 0;
 					border: var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD));
 				}
-				.container input[error]{
+				.container[error] input,.container input[error]{
 					border: var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033));
 				}
 				.container input[disabled]{
@@ -208,68 +212,141 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					flex-grow: 0;
 					flex-basis: auto;
 				}
+
+				/* #region Fondo negro y calendario */
+
+				.fondo {
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background-color: var(--aw-input-date-calendar-fondo---aw-calendar-selected-background-color,rgba(10,10,10,.7));
+					z-index: 1000;
+					display: none;
+				}
+
+				.cont_calendar {
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					flex-flow: row wrap;
+					align-items: center;
+					justify-content: center;
+					z-index: 1000;
+					display: none;
+				}
+				.cont_calendar[open] {
+					display: flex;
+				}
+				.cont_calendar .close {
+					position: absolute;
+					top:0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+				}
+				.cont_calendar .popup {
+					position: relative;
+					width: 0;
+					background-color: white;
+				}
+				.cont_calendar[open] .popup {
+					animation: aw-input-date-df-open .3s forwards;
+				}
+				.cont_calendar .title {
+					position: relative;
+					padding: var(--aw-input-date-calendar-tit-padding,32px 10px 30px);
+					margin: var(--aw-input-date-calendar-tit-margin,0);
+					text-align: var(--aw-input-date-calendar-tit-text-align,center);
+					font-size: var(--aw-input-date-calendar-tit-font-size,11px);
+					color: var(--aw-input-date-calendar-tit-color,white);
+					background-color: var(--aw-input-date-calendar-tit-background-color,var(--aw-primary-color,#1C7CDD));
+					text-transform: var(--aw-input-date-calendar-tit-text-transform,uppercase);
+				}
+				.cont_calendar .title iron-icon {
+					top: var(--aw-input-date-calendar-tit-icon-top,-2px);
+					width: var(--aw-input-date-calendar-tit-icon-size,18px);
+					height: var(--aw-input-date-calendar-tit-icon-size,18px);
+					fill: var(--aw-input-date-calendar-color,white);
+					margin: 0 5px 0 0;
+				}
+				.cont_calendar .calendar {
+					position: relative;
+					padding: 10px;
+				}
+				.cont_calendar aw-calendar-simple {
+					width: 100%;
+				}
+				.cont_calendar[open] .title, .cont_calendar[open] .calendar {
+					animation: aw-input-date-df-show .3s forwards;
+				}
+
+				@keyframes aw-input-date-df-open {
+					from {
+						width: 0;
+						overflow: hidden;
+					}
+
+					to {
+						width: 280px;
+					}
+				}
+				@keyframes aw-input-date-df-show {
+					from {
+						opacity: 0;
+					}
+					to {
+						opacity: 1;
+					}
+				}
 			</style>
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
-				<label><input
+				<label><input readonly autocomplete="off" on-focusin="_focusin" on-focusout="_focusout"/></label>
+			</div>
+			<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
+
+			<div class="inputElement">
+				<input
 					id$="[[id]]"
 					name$="[[name]]"
-					type$="[[type]]"
+					type="hidden"
 					placeholder="[[placeholder]]"
-					minlength$="[[minlength]]"
-					maxlength$="[[maxlength]]"
-					min$="[[min]]"
-					max$="[[max]]"
-					step$="[[step]]"
 					value$="{{value}}"
-					readonly$="[[readonly]]"
 					disabled$="[[disabled]]"
 					autocapitalize$="[[autocapitalize]]"
 					autocorrect$="[[autocorrect]]"
 					autocomplete$="[[autocomplete]]"
 
 					required$="[[required]]"
-					nospaces$="[[nospaces]]"
-					rangelength$="[[rangelength]]"
-					isumber$="[[isumber]]"
-					range$="[[range]]"
-					isemail$="[[isemail]]"
-					isurl$="[[isurl]]"
-					domains$="[[domains]]"
-					isdate$="[[isdate]]"
+					isdate="aaaa-mm-dd"
 					dateprevius$="[[dateprevius]]"
 					minage$="[[minage]]"
 					maxage$="[[maxage]]"
-					security$="[[security]]"
-					equalto$="[[equalto]]"
-					phonenumber$="[[phonenumber]]"
-					phonecountry$="[[phonecountry]]"
-					pattern$="[[pattern]]"
 					novalidate$=[[novalidate]]
 
 					error$=[[error]]
 					errmsg$="{{errmsg}}"
 
-					on-focusin="_focusin"
-					on-focusout="_focusout"
-					on-keyup="_keyup"
-					on-keypress="_keypress"
-					on-change="_change"
-					/></label>
+					readonly
+					/>
 			</div>
-			<div class="flex_inf">
-				<div class="left">
-					<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
-				</div>
-				<div class="right">
-					<aw-char-counter unresolved hidden="{{!countchar}}">{{countCharStr}}</aw-char-counter>
+			
+			<div class="fondo"></div>
+			<div class="cont_calendar">
+				<div class="close" on-click="_close_calendar"></div>
+				<div class="popup">
+					<div class="title">
+						<iron-icon icon="event"></iron-icon>{{titcalendar}}
+					</div>
+					<div class="calendar">
+						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" nomarktoday nomarkfest></aw-calendar-simple>
+					</div>
 				</div>
 			</div>
-
-			<template id="datalist" is="dom-if" if="{{datalist}}">
-				<aw-input-datalist input="{{inputElement}}" datalist="{{datalist}}" dlvisible="{{dlvisible}}"></aw-input-datalist>
-			</template>
-			<slot name="datalist"></slot>
 		`;
 	}
 
@@ -278,6 +355,13 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			// Atributos del componente
 
 			inputElement: { type: Object },
+			inputVisible: { type: Object },
+
+			// Atributos del calendario
+
+			lang: { type: String, value: "es" },
+			nameCalendar: { type: String, value: "" },
+			titcalendar: { type: String, value: "Selecciona una fecha" },
 
 			// Atributos básicos del input
 
@@ -285,11 +369,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			name: { type: String },
 			type: { type: String },
 			placeholder: { type: String },
-			minlength: { type: Number },
-			maxlength: { type: Number },
-			min: { type: Number },
-			max: { type: Number },
-			step: { type: String },
 			value: { type: String },
 			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
             disabled: {type: Boolean, value: false, observer: "_set_disabled"},
@@ -300,38 +379,22 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			// Atributos de diseño
 
 			label: { type: String },
-			noarrows: { type: Boolean, value: false },
 			autofocus: { type: Boolean, value: false },
-			spinners: { type: Boolean, value: false },
+			formatdate: { type: String, value: "numeric" }, // (numeric,long,longDay,short,shortDay)
 
 			// Atrtibutos de validación
 
 			required: { type: Boolean, value: false },
-			nospaces: { type: String },
-			rangelength: { type: String },
-			isumber: { type: Boolean, value: false },
-			range: { type: String },
-			isemail: { type: Boolean, value: false },
-			isurl: { type: Boolean, value: false },
-			domains: { type: String },
 			isdate: { type: String },
 			dateprevius: { type: Boolean, value: false },
 			minage: { type: String },
 			maxage: { type: String },
-			security: { type: String },
-			equalto: { type: String },
-			phonenumber: { type: Boolean, value: false },
-			phonecountry: { type: String },
-			pattern: { type: String },
 			novalidate: { type: Boolean, value: false },
 			validateonchange: { type: Boolean, value: false },
+			
+			// Funciones de escucha
 
-			// Datalist
-
-			list: { type: String },
-			datalist: { type: Object, notify: true },
-			dlvisible: { type: Boolean, value: false, notify: true },
-			observDl: { type: Object },
+			listenFuncs: { type: Object },
 
 			// Relación con el aw-form y el form
 
@@ -343,14 +406,19 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	/**
 	 * @method	connectedCallback
 	 * 
-	 * Realiza las operaciones al conectar el componente.
+	 * Acciones a realizar cuando conecta el componente.
 	 */
 	connectedCallback() {
 		super.connectedCallback();
 
 		// Asignamos el input
 
-		this.inputElement = this.shadowRoot.querySelector( "input" );
+		this.inputElement = this.shadowRoot.querySelector( ".inputElement input" );
+		this.inputVisible = this.shadowRoot.querySelector( ".container input" );
+
+		// Asignamos el nombre del calendario
+
+		this.nameCalendar = "aw-input-date:" + this.name + ( Math.floor(Math.random() * (100000 - 100)) );
 
 		// Inicializamos el componente
 
@@ -359,14 +427,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 		// Activamos los errores
 
 		this.error_listen();
-
-		// Activamos el countchar
-
-		this.set_countchar();
-
-		// Ponemos el datalist
-
-		this._set_datalist();
 		
 		// Buscamos prefixs y suffixs
 
@@ -382,6 +442,16 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			this.connectedfunc( this );
 		}
 
+		// Asignamos funciones de escucha
+
+		this.listenFuncs = {
+			calendar: this._select_date.bind( this )
+		};
+
+		// Escuchamos el evento del calendar
+
+		document.addEventListener( "aw-calendar-simple", this.listenFuncs.calendar );
+
 		// Resolvemos
 
 		this.removeAttribute( "unresolved" );
@@ -390,9 +460,9 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	/**
 	 * @method	disconnectedCallback
 	 * 
-	 * Realiza las operaciones necesarias al desconectar el componente.
+	 * Accciones a realizar cuando se desconecta el componente.
 	 */
-	disconnectedCallback(){
+	disconnectedCallback() {
 		super.disconnectedCallback();
 
 		// Quitamos el elemento del registro
@@ -401,11 +471,9 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			this.parentForm._unregister_element( this.inputElement );
 		}
 
-		// Dejamos de observar los cambios en el datalist
+		// Quitamos el evento de calendar
 
-		if ( this.dataList ) {
-			this.observDl.disconnect();
-		}
+		document.removeEventListener( "aw-calendar-simple", this.listenFuncs.calendar );
 	}
 
 	/**
@@ -414,27 +482,11 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * Inicializa el componente una vez se ha conectado.
 	 */
 	_init() {
-		//  Ajustamos el type del input
-		// . . . . . . . . . . . . . . . . . . . . .
-
-		if ( this.type !== "text" && this.type !== "number" && this.type !== "password" && this.type !== "email" && this.type !== "url" && this.type !== "date" ) {
-			this.type = "text";
-		}
-
-		//  Quitamos los spinners
-		// . . . . . . . . . . . . . . . . . . . . .
-
-		if( !this.spinners && this.type === "number" ) {
-			this.inputElement.setAttribute( "nospinners", "" );
-		}
-
 		//  Ponemos el autofocus
 		// . . . . . . . . . . . . . . . . . . . . . 
 		
 		if( this.autofocus && !this.readonly && !this.disabled ) {
-			setTimeout(() => {
-				this.focus();
-			},100);
+			this.focus();
 		}
 
 		//  Si hay valor
@@ -451,8 +503,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * Pone el foco sobre el input.
 	 */
 	focus() {
-		this.inputElement.focus();
-		this.inputElement.selectionStart = this.inputElement.selectionEnd = this.inputElement.value.length;
+		this.inputVisible.focus();
 	}
 
 	/**
@@ -482,61 +533,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
-	 * @method	_set_datalist
-	 * 
-	 * Configura el datalist del input si existe.
-	 */
-	_set_datalist() {
-		if( this.list ) {
-			let dlSlot = this.shadowRoot.querySelector( "slot[name=datalist]" );
-			this.datalist = dlSlot.assignedNodes()[ 0 ];
-			let options = this.datalist.querySelectorAll( "option" );
-			
-			if( options.length > 0 || this.activelist ) {
-				this.inputElement.classList.add( "datalist" );
-				
-				this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
-				this.observDl.observe( this.datalist, { childList: true } );
-			} else {
-				this.datalist = false;
-			}
-		}
-	}
-
-	/**
-	 * @method	_observe_datalist
-	 * 
-	 * Obserca los cambios en el datalist
-	 */
-	_observe_datalist( ev ) {
-		// Obtenemos el viejo datalist.
-
-		var oldDatalist = ev[ 0 ].target;
-		
-		// Creamos el nuevo datalist
-
-		var newDatalist = document.createElement( "DATALIST" );
-		for( var i = 0; i < this.datalist.attributes.length; i++ ) {
-			newDatalist.setAttribute( this.datalist.attributes[ i ].name, this.datalist.attributes[ i ].value );
-		}
-
-		newDatalist.innerHTML = this.datalist.innerHTML;
-		
-		// Asignamos el nuevo datalist.
-
-		this.datalist = newDatalist;
-
-		this.removeChild( oldDatalist );
-		this.appendChild( this.datalist );
-
-		// Volvemos a poner a la escucha el nuevo datalist.
-
-		this.observDl.disconnect();
-		this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
-		this.observDl.observe( this.datalist, { childList: true } );
-	}
-
-	/**
 	 * @method	_register_in_form
 	 * 
 	 * Registra el elemento en el formulario.
@@ -554,13 +550,59 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
+	 * @method	_open_calendar
+	 * 
+	 * Abre el calendario de selección de fecha.
+	 */
+	_open_calendar() {
+		let fondo = this.shadowRoot.querySelector( ".fondo" );
+		let container = this.shadowRoot.querySelector( ".cont_calendar" );
+
+		Polymer.Fade.in( fondo, { speed: 200 } );
+		container.setAttribute( "open", "" );
+	}
+
+	/**
+	 * @method	_close_calendar
+	 * 
+	 * Cierra el calendario de selección de fecha.
+	 */
+	_close_calendar() {
+		let fondo = this.shadowRoot.querySelector( ".fondo" );
+		let container = this.shadowRoot.querySelector( ".cont_calendar" );
+		
+		Polymer.Fade.out( fondo, {speed: 200 } );
+		container.removeAttribute( "open" );
+	}
+
+	/**
+	 * @method	_select_date
+	 * 
+	 * Selecciona la fecha del calendario y la pasa al input.
+	 */
+	_select_date( ev ) {
+		let response = ev.detail.date;
+
+		if( response.name !== this.nameCalendar ) {
+			return false;
+		}
+
+		this.inputElement.value = response.string;
+		this.inputVisible.value = response.format[ this.formatdate ];
+
+		this._close_calendar();
+
+		this._change();
+	}
+
+	/**
 	 * @method	_focusin
 	 * 
 	 * Acciones a realizar cuando se hace focus sobre el input.
 	 */
-	_focusin( ev ) {
-		super._focusin();
-		
+	_focusin() {
+		this._open_calendar();
+
 		// Impedimos si es de solo lecutura o está desactivado.
 
 		if( this.readonly || this.disabled ) {
@@ -586,8 +628,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * Acciones a realizar cuando se quita el focus del input.
 	 */
 	_focusout( ev ) {
-		super._focusout();
-
 		// Quitamos el label focused
 
 		this.$.label.removeAttribute( "focused" );
@@ -597,40 +637,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 
 		if ( typeof this.focusoutfunc === "function" ) {
 			this.focusoutfunc( this.inputElement );
-		}
-	}
-
-	/**
-	 * @method	_keypress
-	 * 
-	 * Acciones a realizar cuando se presiona una tecla sobre el input.
-	 */
-	_keypress( ev ) {
-		// Invocamos la función externa keypress
-
-		if ( typeof this.keypressfunc === "function" ) {
-			this.keypressfunc( this.inputElement );
-		}
-	}
-
-	/**
-	 * @method	_keyup
-	 * 
-	 * Acciones a realizar cuando se levanta una tecla sobre el input.
-	 */
-	_keyup( ev ) {
-		super._keyup();
-	
-		// Invocamos la función externa keyup
-
-		if ( typeof this.keyupfunc === "function" ) {
-			this.keyupfunc( this.inputElement );
-		}
-
-		// Submitimos el formulario al pulsar intro
-
-		if( ev && ev.keyCode === 13 && this.parentForm && !this.dlvisible ) {
-			this.parentForm.submit();
 		}
 	}
 
@@ -666,4 +672,4 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 }
 
-window.customElements.define( "aw-input-df", AwInputDf );
+window.customElements.define( "aw-input-date-df", AwInputDateDf );
