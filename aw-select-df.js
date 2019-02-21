@@ -268,7 +268,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			noink: { type: Boolean, value: false },
 			colors: { type: Boolean, value: false },
 			opened: { type: Boolean, value: false },
-			selectedindex: { type: String, value: "", observer: "_change_selectedindex" },
+			selectedindex: { type: Number, value: 0, observer: "_change_selectedindex" },
 			selectedvalue: { type: String, value: "", observer: "_change_selectedvalue" },
 
 			// Atributos de funcionamiento
@@ -379,7 +379,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		for( let i = 0; i < opts.length; i++ ) {
 			let selected = false;
 
-			if( !selected && (( parseInt(this.selectedindex) === i ) || ( this.selectedvalue && this.selectedvalue === opts[ i ].value ))) {
+			if( !selected && (( parseInt(this.selectedindex) === i && !this.selectedvalue ) || ( this.selectedvalue && this.selectedvalue === opts[ i ].value ))) {
 				selected = true;
 				this.selected = opts[ i ].value;
 				this.inputElement.value = opts[ i ].value;
@@ -400,12 +400,6 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		}
 
 		this.options_obj = this.options;
-
-		// Si no hay seleccionado, seleccionamos el primer puesto
-
-		if( !this.selected ) {
-			this.selectedindex = 0;
-		}
 
 		// Cogemos las dimensiones de los options
 
