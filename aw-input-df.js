@@ -256,6 +256,10 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					on-keypress="_keypress"
 					on-change="_change"
 					/></label>
+
+				<template id="datalist" is="dom-if" if="{{datalist}}">
+					<aw-input-datalist input="{{inputElement}}" datalist="{{datalist}}" dlvisible="{{dlvisible}}"></aw-input-datalist>
+				</template>
 			</div>
 			<div class="flex_inf">
 				<div class="left">
@@ -265,10 +269,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					<aw-char-counter unresolved hidden="{{!countchar}}">{{countCharStr}}</aw-char-counter>
 				</div>
 			</div>
-
-			<template id="datalist" is="dom-if" if="{{datalist}}">
-				<aw-input-datalist input="{{inputElement}}" datalist="{{datalist}}" dlvisible="{{dlvisible}}"></aw-input-datalist>
-			</template>
 			<slot name="datalist"></slot>
 		`;
 	}
