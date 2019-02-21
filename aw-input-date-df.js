@@ -17,6 +17,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					padding: 0 0 10px 0;
 					margin: 0;
                 	font-family: var(--aw-input-font-family, "arial");
+					vertical-align: var(--aw-input-vertical-align, middle);
 					display: inline-block;
 
 					--aw-calendar-icon-fill-hover: var(--aw-input-date-calendar-icon-fill-hover,var(--aw-input-label-color-focused,var(--aw-primary-color,#1C7CDD)));
