@@ -13,11 +13,10 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		<style>
 			:host {
 				position: relative;
-                padding: 0;
-				margin: 0;
 				padding: 0 0 10px 0;
 				margin: 0;
 				font-family: var(--aw-input-font-family, "arial");
+				vertical-align: var(--aw-input-vertical-align, middle);
 				display: inline-block;
 			}
 
