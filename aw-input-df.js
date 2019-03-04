@@ -171,9 +171,10 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					margin-bottom: 3px;
 				}
 				.prefix > iron-icon, .suffix > iron-icon {
+					top: var(--aw-input-prefix-icon-top,0);
 					fill: var(--aw-input-prefix-color,#555555);
-					width: 22px;
-					height: 22px;
+					width: var(--aw-input-prefix-size,22px);
+					height: var(--aw-input-prefix-size,22px);
 					padding: 0px;
 					transition: fill .2s;
 				}
