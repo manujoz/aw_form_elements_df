@@ -67,7 +67,10 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					margin: 0;
 					color: var(--aw-input-color,#333333);
 					background-color: var(--aw-input-background-color,transparent);
-					border: var(--aw-input-border,solid 1px #CCCCCC);
+					border-top: var(--aw-input-border-top,var(--aw-input-border,solid 1px #CCCCCC));
+					border-right: var(--aw-input-border-right,var(--aw-input-border,solid 1px #CCCCCC));
+					border-bottom: var(--aw-input-border-bottom,var(--aw-input-border,solid 1px #CCCCCC));
+					border-left: var(--aw-input-border-left,var(--aw-input-border,solid 1px #CCCCCC));
 					border-radius: var(--aw-input-border-radius,2px);
 					padding: var(--aw-input-padding,7px);
                 	font-family: var(--aw-input-font-family, "arial");
@@ -83,10 +86,18 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 				}
 				.container input:focus{
                 	outline: 0;
-					border: var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD));
+					border-top: var(--aw-input-border-top-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+					border-right: var(--aw-input-border-right-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+					border-bottom: var(--aw-input-border-bottom-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+					border-left: var(--aw-input-border-left-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+					background-color: var(--aw-input-background-color-focused,var(--aw-input-background-color,transparent));
 				}
 				.container[error] input,.container input[error]{
-					border: var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033));
+					border-top: var(--aw-input-border-top-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+					border-right: var(--aw-input-border-right-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+					border-bottom: var(--aw-input-border-bottom-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+					border-left: var(--aw-input-border-left-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+					background-color: var(--aw-input-background-color-error,var(--aw-input-background-color,transparent));
 				}
 				.container input[disabled]{
 					color: var(--aw-input-color-disabled, #BBBBBB);
@@ -175,9 +186,10 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					margin-bottom: 3px;
 				}
 				.prefix > iron-icon, .suffix > iron-icon {
+					top: var(--aw-input-prefix-icon-top,0);
 					fill: var(--aw-input-prefix-color,#555555);
-					width: 22px;
-					height: 22px;
+					width: var(--aw-input-prefix-size,22px);
+					height: var(--aw-input-prefix-size,22px);
 					padding: 0px;
 					transition: fill .2s;
 				}
