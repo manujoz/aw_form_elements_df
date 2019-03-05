@@ -66,7 +66,10 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				margin: 0;
 				color: var(--aw-input-color,#333333);
 				background-color: var(--aw-input-background-color,transparent);
-				border: var(--aw-input-border,solid 1px #CCCCCC);
+				border-top: var(--aw-input-border-top,var(--aw-input-border,solid 1px #CCCCCC));
+				border-right: var(--aw-input-border-right,var(--aw-input-border,solid 1px #CCCCCC));
+				border-bottom: var(--aw-input-border-bottom,var(--aw-input-border,solid 1px #CCCCCC));
+				border-left: var(--aw-input-border-left,var(--aw-input-border,solid 1px #CCCCCC));
 				border-radius: var(--aw-input-border-radius,2px);
 				padding: var(--aw-input-padding,7px);
 				font-family: var(--aw-input-font-family, "arial");
@@ -82,10 +85,18 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			}
 			.container input:focus{
 				outline: 0;
-				border: var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD));
+				border-top: var(--aw-input-border-top-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+				border-right: var(--aw-input-border-right-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+				border-bottom: var(--aw-input-border-bottom-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+				border-left: var(--aw-input-border-left-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
+				background-color: var(--aw-input-background-color-focused,var(--aw-input-background-color,transparent));
 			}
 			.container input[error]{
-				border: var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033));
+				border-top: var(--aw-input-border-top-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+				border-right: var(--aw-input-border-right-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+				border-bottom: var(--aw-input-border-bottom-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+				border-left: var(--aw-input-border-left-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+				background-color: var(--aw-input-background-color-error,var(--aw-input-background-color,transparent));
 			}
 			.container input[disabled]{
 				color: var(--aw-input-color-disabled, #BBBBBB);
@@ -189,7 +200,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			}
 			.option {
 				position: relative;
-				padding: 10px 25px 10px 10px;
+				padding: var(--aw-select-options-padding,10px 25px 10px 10px);
 				white-space: nowrap;
 				text-align: left;
 				font-weight: normal;
@@ -478,7 +489,8 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		// Marcamos que está abierto y guardamos el scrollTop
 
 		this.opened = true;
-		this.scrolltop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+		this._set_scrolltop();
+		
 
 		// Ponemos el focus
 
@@ -794,6 +806,22 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	}
 
 	/**
+	 * @method	_set_scrolltop
+	 * 
+	 * Asigna el scrolltop teniendo en cuenta el scrolltop de la ventana así como
+	 * el scrolltop de los padres si tienen algún tipo de overflow.
+	 */
+	_set_scrolltop() {
+		this.scrolltop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+
+		var parent = this.parentElement;
+		while( parent.tagName !== "BODY" ) {
+			this.scrolltop += parent.scrollTop;
+			parent = parent.parentElement;
+		}
+	}
+
+	/**
 	 * @method	_set_position
 	 * 
 	 * Asigna la posición de las opciones cuando se abren
@@ -803,12 +831,15 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	_set_position() {
 		var options = this.$.options;
 		var position = this.getBoundingClientRect();
+
+		console.log( position,this.scrolltop );
 		
 		options.style.marginTop = "-" + this.scrolltop + "px";
 		options.style.marginLeft = (this.offsetWidth - options.offsetWidth) + "px";
 		
 		if( this.height > window.innerHeight - 40 ) {
 			options.style.marginTop = "-" + ( position.top + this.scrolltop - 20 )+ "px";
+			console.log( position.top + this.scrolltop );
 
 			setTimeout(() => {
 				options.style.height = (window.innerHeight - 40)  + "px";
@@ -818,6 +849,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			let diff = position.top + this.height - window.innerHeight + this.scrolltop + 20;
 			options.style.marginTop = "-" + diff + "px";
 		}
+
 		if( this.width > window.innerWidth - 40 ) {
 			options.style.marginLeft = "-" + ( position.left - 10 ) + "px";
 			options.style.width = window.innerWidth - 40 + "px";
