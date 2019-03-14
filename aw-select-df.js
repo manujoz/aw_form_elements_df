@@ -831,8 +831,6 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	_set_position() {
 		var options = this.$.options;
 		var position = this.getBoundingClientRect();
-
-		console.log( position,this.scrolltop );
 		
 		options.style.marginTop = "-" + this.scrolltop + "px";
 		options.style.marginLeft = (this.offsetWidth - options.offsetWidth) + "px";
