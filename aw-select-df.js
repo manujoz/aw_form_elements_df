@@ -837,7 +837,6 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		
 		if( this.height > window.innerHeight - 40 ) {
 			options.style.marginTop = "-" + ( position.top + this.scrolltop - 20 )+ "px";
-			console.log( position.top + this.scrolltop );
 
 			setTimeout(() => {
 				options.style.height = (window.innerHeight - 40)  + "px";
