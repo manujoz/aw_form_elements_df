@@ -42,6 +42,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					font-weight: var(--aw-input-label-font-weight,normal);
 					margin: var(--aw-input-label-margin,0);
 					padding: var(--aw-input-label-padding,0);
+					text-align: var(--aw-input-label-text-align,left);
 					transition: color .2s;
 				}
 				#label[writted] {
