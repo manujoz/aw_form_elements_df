@@ -34,6 +34,7 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 					font-weight: var(--aw-input-label-font-weight,normal);
 					margin: var(--aw-input-label-margin,0);
 					padding: var(--aw-input-label-padding,0);
+					text-align: var(--aw-input-label-text-align,left);
 					transition: color .2s;
 				}
 				#label[writted] {
@@ -76,6 +77,9 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 					-ms-box-sizing: border-box;
 					box-sizing: border-box;
 					transition: all .2s;
+				}
+				.container input#nameArchivo:focus {
+					outline: 0;
 				}
 				.container[focused] input#nameArchivo{
                 	outline: 0;
@@ -188,6 +192,9 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 					opacity: 0;
 					cursor: pointer;
 				}
+				#cont_input:focus {
+					outline: 0;
+				}
 
 				/* #region Icono */
 
@@ -234,7 +241,7 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
 				<div class="icon start"><iron-icon icon="image:camera-alt"></iron-icon></div>
-				<input type="text" id="nameArchivo" on-focusin="_focusin" disabled$="[[disabled]]" />
+				<input type="text" id="nameArchivo" on-focus="_focusin" readonly disabled$="[[disabled]]" />
 				<button>Selecciona</button>
 				<div id="cont_input">
 					<label><input
@@ -248,7 +255,6 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 
 						errmsg$="{{errmsg}}"
 						
-						on-focus="_focusin"
 						on-click="_click"
 						on-change="_change"
 						/></label>
@@ -538,6 +544,7 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 	 * Acciones a realizar cuando se hace focus.
 	 */
 	_focusin() {
+		this.focus();
 		this.$.label.setAttribute( "focused", "" );
 		this.$.container.setAttribute( "focused", "" );
 	}

@@ -38,6 +38,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					font-weight: var(--aw-input-label-font-weight,normal);
 					margin: var(--aw-input-label-margin,0);
 					padding: var(--aw-input-label-padding,0);
+					text-align: var(--aw-input-label-text-align,left);
 					transition: color .2s;
 				}
 				#label[writted] {
@@ -315,6 +316,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			label: { type: String },
 			noarrows: { type: Boolean, value: false },
 			autofocus: { type: Boolean, value: false },
+			selectonfocus: { type: Boolean, value: false },
 			spinners: { type: Boolean, value: false },
 
 			// Atrtibutos de validación
@@ -573,6 +575,10 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 */
 	_focusin( ev ) {
 		super._focusin();
+
+		if( this.inputElement.value && this.selectonfocus ) {
+			this.inputElement.select();
+		}
 		
 		// Impedimos si es de solo lecutura o está desactivado.
 
