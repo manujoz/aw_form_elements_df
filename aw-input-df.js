@@ -74,6 +74,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
                 	font-size: var(--aw-input-font-size, 16px);
 					font-weight: var(--aw-input-font-weight,normal);
 					font-style: var(--aw-input-font-style,normal);
+					text-align: var(--aw-input-text-align, left);
 					box-shadow: var(--aw-input-box-shadow,none);
 					-webkit-box-sizing: border-box;
 					-moz-box-sizing: border-box;
