@@ -11,4 +11,5 @@ import "./aw-input-df.js";
 import "./aw-input-date-df.js";
 import "./aw-input-file-df.js";
 import "./aw-select-df.js";
+import "./aw-select-search-df.js";
 import "./aw-textarea-df.js";
