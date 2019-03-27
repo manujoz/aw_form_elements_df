@@ -514,11 +514,17 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			this.$.options.querySelector( ".option" ).setAttribute( "preselected", "" );
 		}
 
-		// Ponemos a la escucha el click en el documento
+		// Ponemos a la escucha el click y el scroll en el documento
 
 		document.addEventListener( "click", this.listenDoc );
 		document.addEventListener( "keydown", this.listenKeys );
 		window.addEventListener( "scroll", this.listenScroll );
+		
+		this._get_scrollables();
+
+		for( let i = 0; i < this.scrollables.length; i++ ) {
+			this.scrollables[ i ].el.addEventListener( "scroll", this.listenScroll );
+		}
 
 		// Vamos a la opción seleccionada
 
@@ -553,11 +559,17 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			options[ i ].removeAttribute( "preselected" );
 		}
 
-		// Dejamos de escuchar el evento del click en el documento
+		// Dejamos de escuchar el evento del click y scroll en el documento
 
 		document.removeEventListener( "click", this.listenDoc );
 		document.removeEventListener( "keydown", this.listenKeys );
 		window.removeEventListener( "scroll", this.listenScroll );
+		
+		this._get_scrollables();
+		
+		for( let i = 0; i < this.scrollables.length; i++ ) {
+			this.scrollables[ i ].el.removeEventListener( "scroll", this.listenScroll );
+		}
 	}
 
 	/**
@@ -857,6 +869,25 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	}
 
 	/**
+	 * @method	_get_scrollables
+	 * 
+	 * Obtiene los elementos scrollables que están por encima del componente
+	 */
+	_get_scrollables() {
+		this.scrollables = [];
+		let parent = this.parentElement;
+		while( parent.tagName != "BODY" ) {
+			if( parent.clientHeight < parent.scrollHeight ) {
+				this.scrollables.push({
+					el: parent,
+					scroll: parent.scrollTop
+				});
+			}
+			parent = parent.parentElement;
+		}
+	}
+
+	/**
 	 * @method	_scroll_event
 	 * 
 	 * Evita el scroll de la página cuando están abiertas las opciones.
@@ -864,6 +895,10 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * @param	{object}		ev			Evento devuelto en el listener
 	 */
 	_scroll_event( ev ) {
+		for( let i = 0; i < this.scrollables.length; i++ ) {
+			this.scrollables[ i ].el.scroll( 0 , this.scrollables[ i ].scroll );
+		}
+
 		window.scroll( 0, this.scrolltop );
 	}
 
