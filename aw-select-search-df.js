@@ -542,7 +542,6 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 
 		this.opened = true;
 		this._set_scrolltop();
-		
 
 		// Ponemos el focus
 
@@ -565,11 +564,17 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			this.$.options.querySelector( ".option" ).setAttribute( "preselected", "" );
 		}
 
-		// Ponemos a la escucha el click en el documento
+		// Ponemos a la escucha el click y el scroll en el documento
 
 		document.addEventListener( "click", this.listenDoc );
 		document.addEventListener( "keydown", this.listenKeys );
 		window.addEventListener( "scroll", this.listenScroll );
+		
+		this._get_scrollables();
+
+		for( let i = 0; i < this.scrollables.length; i++ ) {
+			this.scrollables[ i ].el.addEventListener( "scroll", this.listenScroll );
+		}
 
 		// Ponemos el focus en el input de búsqueda
 
@@ -612,11 +617,17 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			options[ i ].removeAttribute( "preselected" );
 		}
 
-		// Dejamos de escuchar el evento del click en el documento
+		// Dejamos de escuchar el evento del click y scroll en el documento
 
 		document.removeEventListener( "click", this.listenDoc );
 		document.removeEventListener( "keydown", this.listenKeys );
 		window.removeEventListener( "scroll", this.listenScroll );
+		
+		this._get_scrollables();
+		
+		for( let i = 0; i < this.scrollables.length; i++ ) {
+			this.scrollables[ i ].el.removeEventListener( "scroll", this.listenScroll );
+		}
 
 		// Limpiamos las oopciones
 
@@ -954,7 +965,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		var options = this.$.options;
 		var position = this.getBoundingClientRect();
 
-		options.style.width = this.width + "px";
+		options.style.width = this.offsetWidth + "px";
 		options.style.marginTop = "-" + this.scrolltop + "px";
 		options.style.marginLeft = (this.offsetWidth - options.offsetWidth) + "px";
 		
@@ -973,6 +984,25 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	}
 
 	/**
+	 * @method	_get_scrollables
+	 * 
+	 * Obtiene los elementos scrollables que están por encima del componente
+	 */
+	_get_scrollables() {
+		this.scrollables = [];
+		let parent = this.parentElement;
+		while( parent.tagName != "BODY" ) {
+			if( parent.clientHeight < parent.scrollHeight ) {
+				this.scrollables.push({
+					el: parent,
+					scroll: parent.scrollTop
+				});
+			}
+			parent = parent.parentElement;
+		}
+	}
+
+	/**
 	 * @method	_scroll_event
 	 * 
 	 * Evita el scroll de la página cuando están abiertas las opciones.
@@ -980,6 +1010,10 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	 * @param	{object}		ev			Evento devuelto en el listener
 	 */
 	_scroll_event( ev ) {
+		for( let i = 0; i < this.scrollables.length; i++ ) {
+			this.scrollables[ i ].el.scroll( 0 , this.scrollables[ i ].scroll );
+		}
+
 		window.scroll( 0, this.scrolltop );
 	}
 
