@@ -184,20 +184,23 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				overflow-x: auto;
 				transition: margin .1s, height .2s;
 				z-index: 10000;
+				scrollbar-width: thin;
+				scrollbar-color: #BBBBBB transparent;
 			}
 			#options::-webkit-scrollbar {
-			  	width: 7px;
-				height: 7px;
-			  	background-color: #f0f0f0;
+			  	width: 6px;
+				height: 6px;
+			  	background-color: transparent;
 			}
 			#options::-webkit-scrollbar-track {
-			  	background-color: #f0f0f0;
+			  	background-color: transparent;
 			}
 			#options::-webkit-scrollbar-thumb {
 			  	background-color: #bbbbbb;
+				border-radius: 10px;
 			}
 			#options::-webkit-scrollbar-thumb:hover {
-			  	background-color: #999999;
+				background-color: #999999;
 			}
 			.option {
 				position: relative;
