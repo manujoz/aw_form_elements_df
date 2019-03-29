@@ -209,6 +209,8 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 				position: relative;
 				max-height: 400px;
 				overflow-x: auto;
+				scrollbar-width: thin;
+				scrollbar-color: #BBBBBB transparent;
 			}
 			#options .inner::-webkit-scrollbar {
 			  	width: 6px;
