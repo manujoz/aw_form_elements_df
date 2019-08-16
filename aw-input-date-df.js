@@ -412,7 +412,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			dateprevius: { type: Boolean, value: false },
 			minage: { type: String },
 			maxage: { type: String },
-			novalidate: { type: Boolean, value: false },
+			novalidate: { type: Boolean, value: true },
 			validateonchange: { type: Boolean, value: false },
 			
 			// Funciones de escucha
