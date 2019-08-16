@@ -357,7 +357,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 						<iron-icon icon="event"></iron-icon>{{titcalendar}}
 					</div>
 					<div class="calendar">
-						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" nomarktoday nomarkfest></aw-calendar-simple>
+						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}}></aw-calendar-simple>
 					</div>
 				</div>
 			</div>
@@ -376,6 +376,15 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			lang: { type: String, value: "es" },
 			nameCalendar: { type: String, value: "" },
 			titcalendar: { type: String, value: "Selecciona una fecha" },
+			time: { type: Boolean, value: false },
+			nomarktoday: { type: Boolean, value: false },
+			nomarkfest: { type: Boolean, value: false },
+			noselectpast: { type: Boolean, value: false },
+			noselectsat: { type: Boolean, value: false },
+			noselectsun: { type: Boolean, value: false },
+			noselectfest: { type: Boolean, value: false },
+			ccaa: { type: String, value: "" },
+			diasfest: { type: Array, value: "" },
 
 			// Atributos básicos del input
 
@@ -394,7 +403,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 			label: { type: String },
 			autofocus: { type: Boolean, value: false },
-			formatdate: { type: String, value: "numeric" }, // (numeric,long,longDay,short,shortDay)
+			formatdate: { type: String, value: "numeric" }, // (numeric,numericHour,long,longDay,longFull,longHour,short,shortDay,shortFull,shortHour)
 
 			// Atrtibutos de validación
 
@@ -509,6 +518,13 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		if( this.value ) {
 			this._keyup();
 		}
+
+		//  Ponemos el formato de fecha por defecto
+		// . . . . . . . . . . . . . . . . . . . . . 
+		
+		if( this.time && this.formatdate == "numeric" ) {
+			this.formatdate = "numericHour";
+		}
 	}
 
 	/**
@@ -601,10 +617,15 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			return false;
 		}
 
+		let pastDate = this.inputElement.value.split( " " )[ 0 ];
+		let newDate = response.string.split( " " )[ 0 ];
+
 		this.inputElement.value = response.string;
 		this.inputVisible.value = response.format[ this.formatdate ];
 
-		this._close_calendar();
+		if( pastDate !== newDate ) {
+			this._close_calendar();
+		}
 
 		this._change();
 	}
