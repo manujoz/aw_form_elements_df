@@ -319,7 +319,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			</style>
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
-				<label><input readonly autocomplete="off" on-focusin="_focusin" on-focusout="_focusout"/></label>
+				<label><input readonly autocomplete="off" placeholder="[[placeholder]]" on-focusin="_focusin" on-focusout="_focusout"/></label>
 			</div>
 			<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
 
@@ -328,7 +328,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					id$="[[id]]"
 					name$="[[name]]"
 					type="hidden"
-					placeholder="[[placeholder]]"
 					value$="{{value}}"
 					disabled$="[[disabled]]"
 					autocapitalize$="[[autocapitalize]]"
