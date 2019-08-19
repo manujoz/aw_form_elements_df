@@ -6,6 +6,7 @@ import { AwExternsFunctionsMixin } 		from "../aw_extern_functions/aw-extern-func
 
 import "../aw_form_helpers/aw-input-error.js";
 import "../aw_calendar/aw-calendar-simple.js";
+import "../aw_polymer_3/iron-icons/iron-icons.js";
 
 class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement )))) {
 	static get template() {
@@ -207,6 +208,20 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					fill: var(--aw-input-prefix-color-disabled,var(--aw-input-color-disabled, #BBBBBB));
 				}
 
+				/* #region del iron-icon */
+
+				#clear {
+					position: absolute;
+					top: calc(50% - 9px);
+					right: 3px;
+					fill: #a43b3b;
+					width: 18px;
+					height: 18px;
+					background-color: white;
+					cursor: pointer;
+					display: none;
+				}
+
 				/* #region Flexible de error y contador */
 
 				.flex_inf {
@@ -320,6 +335,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
 				<label><input readonly autocomplete="off" placeholder="[[placeholder]]" on-focusin="_focusin" on-focusout="_focusout"/></label>
+				<iron-icon id="clear" icon="clear" on-click="_clear"></iron-icon>
 			</div>
 			<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
 
@@ -621,6 +637,8 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			return false;
 		}
 
+		this.$.clear.style.display = "block";
+
 		let pastDate = this.inputElement.value.split( " " )[ 0 ];
 		let newDate = response.string.split( " " )[ 0 ];
 
@@ -636,6 +654,20 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		} else {
 			this.value = "";
 		}
+	}
+	
+	/**
+	 * @method	_clear
+	 * 
+	 * Limpia la fecha del input.
+	 */
+	_clear() {
+		this.inputElement.value = "";
+		this.inputVisible.value ="";
+
+		this.$.clear.style.display = "none";
+			
+		this._change();
 	}
 
 	/**
