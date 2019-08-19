@@ -627,11 +627,15 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		this.inputElement.value = response.string;
 		this.inputVisible.value = response.format[ this.formatdate ];
 
-		if( pastDate !== newDate ) {
-			this._close_calendar();
+		if( !this.value ) {
+			if( pastDate !== newDate ) {
+				this._close_calendar();
+			}
+			
+			this._change();
+		} else {
+			this.value = "";
 		}
-
-		this._change();
 	}
 
 	/**
