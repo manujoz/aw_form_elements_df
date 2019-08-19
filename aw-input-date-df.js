@@ -356,7 +356,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 						<iron-icon icon="event"></iron-icon>{{titcalendar}}
 					</div>
 					<div class="calendar">
-						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}}></aw-calendar-simple>
+						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit={{value}}></aw-calendar-simple>
 					</div>
 				</div>
 			</div>
@@ -425,6 +425,14 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		};
 	}
 
+	constructor() {
+		super();
+
+		// Asignamos el nombre del calendario
+
+		this.nameCalendar = "aw-input-date:" + this.name + ( Math.floor(Math.random() * (100000 - 100)) );
+	}
+
 	/**
 	 * @method	connectedCallback
 	 * 
@@ -438,9 +446,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		this.inputElement = this.shadowRoot.querySelector( ".inputElement input" );
 		this.inputVisible = this.shadowRoot.querySelector( ".container input" );
 
-		// Asignamos el nombre del calendario
-
-		this.nameCalendar = "aw-input-date:" + this.name + ( Math.floor(Math.random() * (100000 - 100)) );
 
 		// Inicializamos el componente
 
@@ -471,7 +476,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		};
 
 		// Escuchamos el evento del calendar
-
+		
 		document.addEventListener( "aw-calendar-simple", this.listenFuncs.calendar );
 
 		// Resolvemos
@@ -515,7 +520,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		// . . . . . . . . . . . . . . . . . . . . . 
 		
 		if( this.value ) {
-			this._keyup();
+			
 		}
 
 		//  Ponemos el formato de fecha por defecto
