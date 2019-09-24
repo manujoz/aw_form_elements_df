@@ -417,8 +417,8 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 	 */
 	_set_input_value() {
 		// Si hay error detenemos
-			
-		if( this.error ) {
+		
+		if( this.inputElement.getAttribute( "errmsg" )) {
 			this.inputVisible.value = "";
 			this.inputElement.value = "";
 			return false;
@@ -528,7 +528,7 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 		}
 
 		// Validamos el input
-
+		
 		if( !this.novalidate || this.validateonchange || ( this.parentForm && !this.parentForm.novalidate )) {
 			this.__errorValidateInput( this.inputElement );
 		}
