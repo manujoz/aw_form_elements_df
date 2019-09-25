@@ -213,7 +213,7 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 			autocomplete: { type: String, value: "off" },
 			minlength: { type: Number },
 			maxlength: { type: Number },
-			value: { type: String },
+			value: { type: String, value: "" },
 			autocorrect: String,
 			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
 			disabled: {type: Boolean, value: false, observer: "_set_disabled"},
@@ -313,14 +313,7 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 		NOTE: Desactivado de mommento a la espera de su necesidad.
 		
 		if ( this.value ) {
-			let eventKeyUp = new Event( "keyup" );
-
-			this.inputElement.value = this.value;
-			this.inputElement.dispatchEvent( eventKeyUp );
-			this.inputElement.blur();
 			this._keyup();
-
-			eventKeyUp = null;
 		}*/
 
 		//  Ponemos el autofocus
