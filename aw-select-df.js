@@ -830,10 +830,14 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	_set_scrolltop() {
 		this.scrolltop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
 
-		var parent = this.parentElement;
+		var parent = this.parentNode;
 		while( parent.tagName !== "BODY" ) {
 			this.scrolltop += parent.scrollTop;
-			parent = parent.parentElement;
+			parent = parent.parentNode;
+
+			if( parent.toString() == "[object ShadowRoot]" ) {
+				parent = parent.host;
+			}
 		}
 	}
 
@@ -878,7 +882,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 */
 	_get_scrollables() {
 		this.scrollables = [];
-		let parent = this.parentElement;
+		let parent = this.parentNode;
 		while( parent.tagName != "BODY" ) {
 			if( parent.clientHeight < parent.scrollHeight ) {
 				this.scrollables.push({
@@ -886,7 +890,11 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 					scroll: parent.scrollTop
 				});
 			}
-			parent = parent.parentElement;
+			parent = parent.parentNode;
+
+			if( parent.toString() == "[object ShadowRoot]" ) {
+				parent = parent.host;
+			}
 		}
 	}
 
