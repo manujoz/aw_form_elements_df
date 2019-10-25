@@ -828,16 +828,27 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * el scrolltop de los padres si tienen algún tipo de overflow.
 	 */
 	_set_scrolltop() {
-		this.scrolltop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+		this.scrolltop = 0;
 
 		var parent = this.parentNode;
+		var webcomponent = null;
 		while( parent.tagName !== "BODY" ) {
-			this.scrolltop += parent.scrollTop;
+			var suma = parent.scrollTop;
 			parent = parent.parentNode;
 
 			if( parent.toString() == "[object ShadowRoot]" ) {
+				webcomponent = parent.host;
 				parent = parent.host;
+				break;
+			} else {
+				this.scrollTop += suma;
 			}
+		}
+
+		if( !webcomponent ) {
+			this.scrolltop += (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+		} else {
+			this.scrollTop += webcomponent.scrollTop;
 		}
 	}
 
