@@ -841,7 +841,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				parent = parent.host;
 				break;
 			} else {
-				this.scrollTop += suma;
+				this.scrolltop += suma;
 			}
 		}
 
