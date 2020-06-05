@@ -6,6 +6,7 @@ import "../aw_form_elements_common/aw-onoff.js";
 import "../aw_form_elements_common/aw-radio.js";
 import "../aw_form_elements_common/aw-range.js";
 import "../aw_form_elements_common/aw-range-double.js";
+import "../aw_form_elements_common/aw-selectable.js";
 
 import "./aw-input-df.js";
 import "./aw-input-color-df.js";
