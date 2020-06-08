@@ -166,7 +166,7 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 
 			id: { type: String },
 			name: { type: String },
-			value: { type: String },
+			value: { type: String, observer: "_change_value" },
 			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
             disabled: {type: Boolean, value: false, observer: "_set_disabled"},
 
@@ -278,6 +278,19 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 	}
 
 	/**
+	 * @method	_change_value
+	 * 
+	 * Observa el cambio del value
+	 */
+	_change_value()
+	{
+		if( this.inputColor.value !== this.value ) {
+			this.inputColor.value = this.value;
+			this._change();
+		}
+	}
+
+	/**
 	 * @method	_focusin
 	 * 
 	 * Acciones a realizar cuando se hace focus sobre el input.
@@ -357,6 +370,16 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 		// Registramos el elemento
 
 		this.dispatchEvent(new CustomEvent('aw-form-element-register', { detail: this, bubbles: true, composed: true }));
+	}
+
+	_set_disabled()
+	{
+		// TODO: Hacer este método
+	}
+
+	_set_readonly()
+	{
+		// TODO: Hacer este método
 	}
 }
 
