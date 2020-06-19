@@ -1037,14 +1037,14 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		}
 
 		// Ajustamos dimensiones y posición
+		if( width > this.offsetWidth ) {
+			width = this.offsetWidth;
+		}
 		options.style.width = width + "px";
-		//options.style.width = this.offsetWidth + "px";
 		options.style.marginTop = "-" + this.scrolltop + "px";
 		options.style.marginLeft = (this.offsetWidth - options.offsetWidth) + "px";
 
-		//console.log( options.offsetLeft, this.offsetWidth - options.offsetWidth);
 		if( options.offsetLeft < 0 ) {
-			//options.style.marginLeft = ((this.offsetWidth - options.offsetWidth) - options.offsetLeft + 10) + "px";
 			options.style.marginLeft = "0px";
 		}
 		
