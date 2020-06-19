@@ -208,7 +208,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			#options .inner {
 				position: relative;
 				max-height: 400px;
-				overflow-x: auto;
+				overflow-x: hidden;
 				scrollbar-width: thin;
 				scrollbar-color: #BBBBBB transparent;
 			}
@@ -247,19 +247,6 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 				color: var(--aw-select-options-color-selected,white);
 			}
 		</style>
-		<div class="cont_options">
-			<div id="options">
-				<div class="search">
-					<input placeholder="Buscar" on-keyup="_filter_options">
-					<iron-icon icon="search"></iron-icon>
-				</div>
-				<div class="inner">
-					<template is="dom-repeat" items="{{options}}" as="option" filter="{{_filtering(string)}}">
-						<div class="option" style$="{{option.style}}" value$="{{option.value}}" selected$="{{option.selected}}" title$="{{option.title}}" on-click="_select_option" on-mouseover="_hover">{{option.inner}}</div>
-					</template>
-				</div>
-			</div>
-		</div>
 		<div id="label" hidden="{{!label}}">{{label}}</div>
 
 		<div id="container" class="container">
@@ -272,6 +259,20 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			</template>
 		</div>
 		<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
+
+		<div class="cont_options" on-click="_open_options">
+			<div id="options">
+				<div class="search">
+					<input placeholder="Buscar" on-keyup="_filter_options">
+					<iron-icon icon="search"></iron-icon>
+				</div>
+				<div class="inner">
+					<template is="dom-repeat" items="{{options}}" as="option" filter="{{_filtering(string)}}">
+						<div class="option" style$="{{option.style}}" value$="{{option.value}}" selected$="{{option.selected}}" title$="{{option.title}}" on-click="_select_option" on-mouseover="_hover">{{option.inner}}</div>
+					</template>
+				</div>
+			</div>
+		</div>
 
 		<div class="hidden">
 			<input
@@ -676,6 +677,12 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		this.inputElement.value = opt.getAttribute( "value" );
 		this.inputVisible.value = opt.innerHTML;
 		
+		if( this.inputElement.value ) {
+			this.setAttribute( "title", opt.innerHTML );
+		} else {
+			this.removeAttribute( "title" );
+		}
+		
 		// Asignamos el color si corresponde
 
 		this._set_color();
@@ -691,6 +698,10 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 				options[ i ].removeAttribute( "selected" );
 			}
 		}
+
+		setTimeout(() => {
+			this._close_options();
+		}, 50);
 
 		// lanzamos el cambio
 
@@ -726,6 +737,21 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		this.$.options.querySelector( ".inner" ).scrollTop = top - 70;
 	}
 
+	/** Se desliza según el preseleccionado */
+	_go_to_preselected_option()
+	{
+		let inner = this.$.options.querySelector( ".inner" );
+		var optSel = this.$.options.querySelector( "div[preselected]" );
+		var optTop = optSel.offsetTop;
+		let bottomInner = inner.scrollTop + inner.offsetHeight;
+
+		if( optTop + optSel.offsetHeight > bottomInner ) {
+			inner.scrollTop = optTop + optSel.offsetHeight - optSel.offsetHeight - ( inner.offsetHeight - optSel.offsetHeight);
+		} else if( optTop < inner.scrollTop ) {
+			inner.scrollTop = optTop;
+		}
+	}
+
 	/**
 	 * @method	_handdle_keys
 	 * 
@@ -736,7 +762,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	_handdle_keys( ev ) {
 		if( ev.keyCode == 38 || ev.keyCode == 40 || ev.keyCode == 13 ) {
 			ev.preventDefault();
-		} else {
+		} else if( ev.keyCode !== 9 ) {
 			return false;
 		}
 
@@ -763,6 +789,8 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			} else {
 				options[ options.length - 1 ].setAttribute( "preselected", "" );
 			}
+
+			this._go_to_preselected_option();
 		} else
 
 		// Si pulsamos abajo
@@ -775,14 +803,16 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			} else {
 				options[ 0 ].setAttribute( "preselected", "" );
 			}
+
+			this._go_to_preselected_option();
 		} else
 
 		// Si pulsamos intro
 
-		if( ev.keyCode === 13 ) {
+		if( ev.keyCode === 13 || ev.keyCode == 9 ) {
 			selected.removeAttribute( "preselected" );
 			this._select_option( "", selected );
-			this._close_options();
+			//this._close_options();
 		}
 	}
 	
@@ -980,11 +1010,43 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		this.isupper = false;
 
 		var options = this.$.options;
+		let inner = options.querySelector( ".inner" );
 		var position = this.getBoundingClientRect();
 
-		options.style.width = this.offsetWidth + "px";
+		// Obtenemos el ancho del inner
+
+		let prov = document.createElement( "DIV" );
+		prov.style.opacity = 0;
+		prov.style.position = "absolute";
+		prov.style.top = 0;
+		prov.style.left = 0;
+		prov.style.height = "100%";
+		prov.style.overflowY = "hidden";
+		prov.style.zIndex = -10000;
+		prov.style.fontFamily = window.getComputedStyle(inner, null).getPropertyValue("font-family");
+		prov.style.fontSize = window.getComputedStyle(inner, null).getPropertyValue("font-size");
+		prov.innerHTML = options.querySelector( ".inner" ).innerHTML;
+		document.body.appendChild( prov );
+		
+		let width = prov.offsetWidth + 20;
+		document.body.removeChild( prov );
+		
+		// Ajustamos el ancho
+		if( width > window.innerWidth - 40 ) {
+			width = window.innerWidth - 40;
+		}
+
+		// Ajustamos dimensiones y posición
+		options.style.width = width + "px";
+		//options.style.width = this.offsetWidth + "px";
 		options.style.marginTop = "-" + this.scrolltop + "px";
 		options.style.marginLeft = (this.offsetWidth - options.offsetWidth) + "px";
+
+		//console.log( options.offsetLeft, this.offsetWidth - options.offsetWidth);
+		if( options.offsetLeft < 0 ) {
+			//options.style.marginLeft = ((this.offsetWidth - options.offsetWidth) - options.offsetLeft + 10) + "px";
+			options.style.marginLeft = "0px";
+		}
 		
 		if( this.height > window.innerHeight - 40 ) {
 			options.style.marginTop = "-" + ( position.top + this.scrolltop - 20 )+ "px";
