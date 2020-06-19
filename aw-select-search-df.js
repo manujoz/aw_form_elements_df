@@ -1037,7 +1037,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		}
 
 		// Ajustamos dimensiones y posición
-		if( width > this.offsetWidth ) {
+		if( width < this.offsetWidth ) {
 			width = this.offsetWidth;
 		}
 		options.style.width = width + "px";
