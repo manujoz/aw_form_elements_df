@@ -91,10 +91,10 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					background-color: var(--aw-input-background-color-focused,var(--aw-input-background-color,transparent));
 				}
 				.container input[error]{
-					border-top: var(--aw-input-border-top-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
-					border-right: var(--aw-input-border-right-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
-					border-bottom: var(--aw-input-border-bottom-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
-					border-left: var(--aw-input-border-left-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
+					border-top: var(--aw-input-border-top-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033)));
+					border-right: var(--aw-input-border-right-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033)));
+					border-bottom: var(--aw-input-border-bottom-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033)));
+					border-left: var(--aw-input-border-left-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033)));
 					background-color: var(--aw-input-background-color-error,var(--aw-input-background-color,transparent));
 				}
 				.container input[disabled]{
@@ -425,40 +425,25 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
-	 * @method	_init
+	 * @method error_hide
 	 * 
-	 * Inicializa el componente una vez se ha conectado.
+	 * Muestra u oculta un mensaje de error
 	 */
-	_init() {
-		//  Ajustamos el type del input
-		// . . . . . . . . . . . . . . . . . . . . .
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
 
-		if ( this.type !== "text" && this.type !== "number" && this.type !== "password" && this.type !== "email" && this.type !== "url" && this.type !== "date" ) {
-			this.type = "text";
-		}
-
-		//  Quitamos los spinners
-		// . . . . . . . . . . . . . . . . . . . . .
-
-		if( !this.spinners && this.type === "number" ) {
-			this.inputElement.setAttribute( "nospinners", "" );
-		}
-
-		//  Ponemos el autofocus
-		// . . . . . . . . . . . . . . . . . . . . . 
-		
-		if( this.autofocus && !this.readonly && !this.disabled ) {
-			setTimeout(() => {
-				this.focus();
-			},100);
-		}
-
-		//  Si hay valor
-		// . . . . . . . . . . . . . . . . . . . . . 
-		
-		if( this.value ) {
-			this._keyup();
-		}
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
 	}
 
 	/**
@@ -472,101 +457,34 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
-	 * @method	_set_readonly
+	 * @method	_change
 	 * 
-	 * Pone el input como solo lectura.
+	 * Acciones a realizar cuando se realiza un cambio en el input.
 	 */
-	_set_readonly() {
-		if ( this.readonly ) {
-			this.$.label.setAttribute( "readonly", "" );
-		} else {
-			this.$.label.removeAttribute( "readonly" );
-		}
-	}
+	_change( ev ) {
+		// Invocamos la función externa de change change
 
-	/**
-	 * @method	_set_disabled
-	 * 
-	 * Pone el input en modo disabled.
-	 */
-	_set_disabled() {
-		if ( this.disabled ) {
-			this.$.label.setAttribute( "disabled", "" );
-		} else {
-			this.$.label.removeAttribute( "disabled" );
-		}
-	}
-
-	/**
-	 * @method	_set_datalist
-	 * 
-	 * Configura el datalist del input si existe.
-	 */
-	_set_datalist() {
-		if( this.list ) {
-			let dlSlot = this.shadowRoot.querySelector( "slot[name=datalist]" );
-			this.datalist = dlSlot.assignedNodes()[ 0 ];
-			let options = this.datalist.querySelectorAll( "option" );
-			
-			if( options.length > 0 || this.activelist ) {
-				this.inputElement.classList.add( "datalist" );
-				
-				this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
-				this.observDl.observe( this.datalist, { childList: true } );
-			} else {
-				this.datalist = false;
-			}
-		}
-	}
-
-	/**
-	 * @method	_observe_datalist
-	 * 
-	 * Obserca los cambios en el datalist
-	 */
-	_observe_datalist( ev ) {
-		// Obtenemos el viejo datalist.
-
-		var oldDatalist = ev[ 0 ].target;
-		
-		// Creamos el nuevo datalist
-
-		var newDatalist = document.createElement( "DATALIST" );
-		for( var i = 0; i < this.datalist.attributes.length; i++ ) {
-			newDatalist.setAttribute( this.datalist.attributes[ i ].name, this.datalist.attributes[ i ].value );
+		if ( typeof this.changefunc === "function" ) {
+			this.changefunc( this.inputElement );
 		}
 
-		newDatalist.innerHTML = this.datalist.innerHTML;
-		
-		// Asignamos el nuevo datalist.
+		// Si el input tiene el atributo "novalidate" o no tiene el validateonchange, no se valida
 
-		this.datalist = newDatalist;
-
-		this.removeChild( oldDatalist );
-		this.appendChild( this.datalist );
-
-		// Volvemos a poner a la escucha el nuevo datalist.
-
-		this.observDl.disconnect();
-		this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
-		this.observDl.observe( this.datalist, { childList: true } );
-	}
-
-	/**
-	 * @method	_register_in_form
-	 * 
-	 * Registra el elemento en el formulario.
-	 */
-	_register_in_form() {
-		// Si no debe registrarse
-
-		if( this.noregister ) {
+		if ( this.novalidate ) {
 			return false;
 		}
 
-		// Registramos el elemento
+		if ( !this.validateonchange ) {
+			return false;
+		}
 
-		this.dispatchEvent(new CustomEvent('aw-form-element-register', { detail: this, bubbles: true, composed: true }));
+		if ( this.parentForm && this.parentForm.novalidate ) {
+			return false;
+		}
+
+		// Validamos el campo
+
+		this.__errorValidateInput( this.inputElement );
 	}
 
 	/**
@@ -621,6 +539,43 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
+	 * @method	_init
+	 * 
+	 * Inicializa el componente una vez se ha conectado.
+	 */
+	_init() {
+		//  Ajustamos el type del input
+		// . . . . . . . . . . . . . . . . . . . . .
+
+		if ( this.type !== "text" && this.type !== "number" && this.type !== "password" && this.type !== "email" && this.type !== "url" && this.type !== "date" ) {
+			this.type = "text";
+		}
+
+		//  Quitamos los spinners
+		// . . . . . . . . . . . . . . . . . . . . .
+
+		if( !this.spinners && this.type === "number" ) {
+			this.inputElement.setAttribute( "nospinners", "" );
+		}
+
+		//  Ponemos el autofocus
+		// . . . . . . . . . . . . . . . . . . . . . 
+		
+		if( this.autofocus && !this.readonly && !this.disabled ) {
+			setTimeout(() => {
+				this.focus();
+			},100);
+		}
+
+		//  Si hay valor
+		// . . . . . . . . . . . . . . . . . . . . . 
+		
+		if( this.value ) {
+			this._keyup();
+		}
+	}
+
+	/**
 	 * @method	_keypress
 	 * 
 	 * Acciones a realizar cuando se presiona una tecla sobre el input.
@@ -655,34 +610,101 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
-	 * @method	_change
+	 * @method	_observe_datalist
 	 * 
-	 * Acciones a realizar cuando se realiza un cambio en el input.
+	 * Obserca los cambios en el datalist
 	 */
-	_change( ev ) {
-		// Invocamos la función externa de change change
+	_observe_datalist( ev ) {
+		// Obtenemos el viejo datalist.
 
-		if ( typeof this.changefunc === "function" ) {
-			this.changefunc( this.inputElement );
+		var oldDatalist = ev[ 0 ].target;
+		
+		// Creamos el nuevo datalist
+
+		var newDatalist = document.createElement( "DATALIST" );
+		for( var i = 0; i < this.datalist.attributes.length; i++ ) {
+			newDatalist.setAttribute( this.datalist.attributes[ i ].name, this.datalist.attributes[ i ].value );
 		}
 
-		// Si el input tiene el atributo "novalidate" o no tiene el validateonchange, no se valida
+		newDatalist.innerHTML = this.datalist.innerHTML;
+		
+		// Asignamos el nuevo datalist.
 
-		if ( this.novalidate ) {
+		this.datalist = newDatalist;
+
+		this.removeChild( oldDatalist );
+		this.appendChild( this.datalist );
+
+		// Volvemos a poner a la escucha el nuevo datalist.
+
+		this.observDl.disconnect();
+		this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
+		this.observDl.observe( this.datalist, { childList: true } );
+	}
+
+	/**
+	 * @method	_register_in_form
+	 * 
+	 * Registra el elemento en el formulario.
+	 */
+	_register_in_form() {
+		// Si no debe registrarse
+
+		if( this.noregister ) {
 			return false;
 		}
 
-		if ( !this.validateonchange ) {
-			return false;
+		// Registramos el elemento
+
+		this.dispatchEvent(new CustomEvent('aw-form-element-register', { detail: this, bubbles: true, composed: true }));
+	}
+
+	/**
+	 * @method	_set_datalist
+	 * 
+	 * Configura el datalist del input si existe.
+	 */
+	_set_datalist() {
+		if( this.list ) {
+			let dlSlot = this.shadowRoot.querySelector( "slot[name=datalist]" );
+			this.datalist = dlSlot.assignedNodes()[ 0 ];
+			let options = this.datalist.querySelectorAll( "option" );
+			
+			if( options.length > 0 || this.activelist ) {
+				this.inputElement.classList.add( "datalist" );
+				
+				this.observDl = new MutationObserver( this._observe_datalist.bind( this ));
+				this.observDl.observe( this.datalist, { childList: true } );
+			} else {
+				this.datalist = false;
+			}
 		}
+	}
 
-		if ( this.parentForm && this.parentForm.novalidate ) {
-			return false;
+	/**
+	 * @method	_set_disabled
+	 * 
+	 * Pone el input en modo disabled.
+	 */
+	_set_disabled() {
+		if ( this.disabled ) {
+			this.$.label.setAttribute( "disabled", "" );
+		} else {
+			this.$.label.removeAttribute( "disabled" );
 		}
+	}
 
-		// Validamos el campo
-
-		this.__errorValidateInput( this.inputElement );
+	/**
+	 * @method	_set_readonly
+	 * 
+	 * Pone el input como solo lectura.
+	 */
+	_set_readonly() {
+		if ( this.readonly ) {
+			this.$.label.setAttribute( "readonly", "" );
+		} else {
+			this.$.label.removeAttribute( "readonly" );
+		}
 	}
 }
 
