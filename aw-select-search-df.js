@@ -420,6 +420,42 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	}
 
 	/**
+	 * @method error_hide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method	reload
+	 * 
+	 * Refresca los options dentro del componente si cambiaron en el aw-select
+	 */
+	reload() {
+		this.selected = "";
+		this.inputElement.value = "";
+		this.inputVisible.value = "";
+		this.$.label.removeAttribute( "writted" );
+
+		this._create();
+	}
+
+	/**
 	 * @method	_create	
 	 * 
 	 * Crea las opciones del aw-select.
@@ -1069,7 +1105,8 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	 */
 	_get_scrollables() {
 		this.scrollables = [];
-		let parent = this.parentElement;
+		let parent = this.parentNode;
+		
 		while( parent.tagName != "BODY" ) {
 			if( parent.clientHeight < parent.scrollHeight ) {
 				this.scrollables.push({
@@ -1077,7 +1114,10 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 					scroll: parent.scrollTop
 				});
 			}
-			parent = parent.parentElement;
+			parent = parent.parentNode;
+			if( parent.toString() == "[object ShadowRoot]" ) {
+				parent = parent.host;
+			}
 		}
 	}
 
@@ -1094,20 +1134,6 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		}
 
 		window.scroll( 0, this.scrolltop );
-	}
-
-	/**
-	 * @method	reload
-	 * 
-	 * Refresca los options dentro del componente si cambiaron en el aw-select
-	 */
-	reload() {
-		this.selected = "";
-		this.inputElement.value = "";
-		this.inputVisible.value = "";
-		this.$.label.removeAttribute( "writted" );
-
-		this._create();
 	}
 
 	/**

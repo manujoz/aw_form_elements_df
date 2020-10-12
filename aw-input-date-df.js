@@ -520,6 +520,37 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	}
 
 	/**
+	 * @method error_hide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method	focus
+	 * 
+	 * Pone el foco sobre el input.
+	 */
+	focus() {
+		this.inputVisible.focus();
+	}
+
+	/**
 	 * @method	_init
 	 * 
 	 * Inicializa el componente una vez se ha conectado.
@@ -545,15 +576,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		if( this.time && this.formatdate == "numeric" ) {
 			this.formatdate = "numericHour";
 		}
-	}
-
-	/**
-	 * @method	focus
-	 * 
-	 * Pone el foco sobre el input.
-	 */
-	focus() {
-		this.inputVisible.focus();
 	}
 
 	/**

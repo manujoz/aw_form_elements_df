@@ -347,6 +347,37 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 	}
 
 	/**
+	 * @method error_hide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method	focus
+	 * 
+	 * Pone el foco sobre el inputELement.
+	 */
+	focus() {
+		this.inputElement.focus();
+	}
+
+	/**
 	 * @method	_init
 	 * 
 	 * Inicializa el componente una vez se ha conectado.
@@ -384,15 +415,6 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 				this.inputVisible.style.paddingLeft = ( paddingLeft + contIcon.offsetWidth + 2 ) + "px";
 			}, 10);
 		}
-	}
-
-	/**
-	 * @method	focus
-	 * 
-	 * Pone el foco sobre el inputELement.
-	 */
-	focus() {
-		this.inputElement.focus();
 	}
 
 	/**

@@ -380,6 +380,42 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	}
 
 	/**
+	 * @method error_hide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method	reload
+	 * 
+	 * Refresca los options dentro del componente si cambiaron en el aw-select
+	 */
+	reload() {
+		this.selected = "";
+		this.inputElement.value = "";
+		this.inputVisible.value = "";
+		this.$.label.removeAttribute( "writted" );
+
+		this._create();
+	}
+
+	/**
 	 * @method	_create	
 	 * 
 	 * Crea las opciones del aw-select.
@@ -922,20 +958,6 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		}
 
 		window.scroll( 0, this.scrolltop );
-	}
-
-	/**
-	 * @method	reload
-	 * 
-	 * Refresca los options dentro del componente si cambiaron en el aw-select
-	 */
-	reload() {
-		this.selected = "";
-		this.inputElement.value = "";
-		this.inputVisible.value = "";
-		this.$.label.removeAttribute( "writted" );
-
-		this._create();
 	}
 
 	/**

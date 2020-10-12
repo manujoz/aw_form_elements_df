@@ -1,0 +1,21 @@
+{
+	"name": "aw_form_elements_df",
+	"version": "2.0.32",
+	"description": "Componentes de formulario estilo Arisman Webs",
+	"keywords": [
+		"Arisman Webs"
+	],
+	"author": "Arisman Webs",
+	"dependencies": {
+		"aw_button": "^2.0.0",
+		"aw_calendar": "^2.0.0",
+		"aw_extern_functions": "^2.0.0",
+		"aw_form": "^2.0.0",
+		"aw_form_elements_common": "^2.0.0",
+		"aw_form_helpers": "^2.0.1",
+		"aw_form_mixins": "^2.0.0",
+		"aw_polymer_3": "^1.1.0"
+	},
+	"types": "./index.d.ts",
+	"license": "ISC"
+}
