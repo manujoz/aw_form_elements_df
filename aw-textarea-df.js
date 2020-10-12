@@ -302,6 +302,38 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 	}
 
 	/**
+	 * @method error_hide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method	focus
+	 * 
+	 * Pone el foco sobre el input.
+	 */
+	focus() {
+		this.inputElement.focus();
+		this.inputElement.selectionStart = this.inputElement.selectionEnd = this.inputElement.value.length;
+	}
+
+	/**
 	 * @method	_init
 	 * 
 	 * Inicializa el componente una vez se ha conectado.
@@ -323,16 +355,6 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 				this.focus();
 			},100);
 		}
-	}
-
-	/**
-	 * @method	focus
-	 * 
-	 * Pone el foco sobre el input.
-	 */
-	focus() {
-		this.inputElement.focus();
-		this.inputElement.selectionStart = this.inputElement.selectionEnd = this.inputElement.value.length;
 	}
 
 	/**

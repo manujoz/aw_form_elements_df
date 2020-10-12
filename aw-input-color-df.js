@@ -241,6 +241,28 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 	}
 
 	/**
+	 * @method error_hide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method error_show
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
 	 * @method	_change
 	 * 
 	 * Acciones a realizar cuando el valor cambia
