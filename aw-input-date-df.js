@@ -405,7 +405,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 			id: { type: String },
 			name: { type: String },
-			type: { type: String },
 			placeholder: { type: String },
 			value: { type: String },
 			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
@@ -539,6 +538,34 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	error_show( message )
 	{
 		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value()
+	{
+		return this.inputElement.value;
+	}
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error()
+	{
+		if( this.inputElement.getAttribute( "errmsg" )) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

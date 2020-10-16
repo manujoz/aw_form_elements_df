@@ -18,6 +18,24 @@ interface AwInput extends HTMLElement {
 	error_show( message: string ) : void;
 
 	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
+
+	/**
 	 * @method	focus
 	 * 
 	 * Pone el foco sobre el input.
@@ -50,6 +68,24 @@ interface AwSelect extends HTMLElement {
 	error_show( message: string ) : void;
 
 	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
+
+	/**
 	 * @method	reload
 	 * 
 	 * Refresca los options dentro del componente si cambiaron en el aw-select
@@ -80,6 +116,29 @@ interface AwInputColor extends HTMLElement {
 	 * @param {string} message Mensaje de error que se va a mostrar
 	 */
 	error_show( message: string ) : void;
+
+	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
+}
+
+declare var AwInputColor: {
+	prototype: AwInputColor,
+	new(): AwInputColor
 }
 
 interface AwSelectSearch extends HTMLElement {
@@ -102,6 +161,24 @@ interface AwSelectSearch extends HTMLElement {
 	error_show( message: string ) : void;
 
 	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
+
+	/**
 	 * @method	reload
 	 * 
 	 * Refresca los options dentro del componente si cambiaron en el aw-select
@@ -112,11 +189,6 @@ interface AwSelectSearch extends HTMLElement {
 declare var AwSelectSearch: {
 	prototype: AwSelectSearch,
 	new(): AwSelectSearch
-}
-
-declare var AwInputColor: {
-	prototype: AwInputColor,
-	new(): AwInputColor
 }
 
 interface AwInputDate extends HTMLElement {
@@ -137,6 +209,24 @@ interface AwInputDate extends HTMLElement {
 	 * @param {string} message Mensaje de error que se va a mostrar
 	 */
 	error_show( message: string ) : void;
+
+	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
 
 	/**
 	 * @method	focus
@@ -171,6 +261,31 @@ interface AwInputFile extends HTMLElement {
 	error_show( message: string ) : void;
 
 	/**
+	 * @method	get_files
+	 * 
+	 * Obtiene los archivos cargados en el input
+	 */
+	get_files() : FileList
+
+	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
+
+	/**
 	 * @method	focus
 	 * 
 	 * Pone el foco sobre el input.
@@ -201,6 +316,24 @@ interface AwTextArea extends HTMLElement {
 	 * @param {string} message Mensaje de error que se va a mostrar
 	 */
 	error_show( message: string ) : void;
+
+	/**
+	 * @method get_value
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value() : string;
+
+	/**
+	 * @method	has_error
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error() : boolean;
 
 	/**
 	 * @method	focus
