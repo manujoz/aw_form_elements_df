@@ -15,6 +15,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				position: relative;
 				padding: 0 0 10px 0;
 				margin: 0;
+				width: 180px;
 				font-family: var(--aw-input-font-family, "arial");
 				vertical-align: var(--aw-input-vertical-align, middle);
 				display: inline-block;
@@ -63,8 +64,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				border: var(--aw-input-border-error,solid 1px var(--aw-error-color,#b13033));
 			}
 			.container .input_visible {
-				width: 180px;
-				max-width: 100%;
+				width: 100%;
 				margin: 0;
 				color: var(--aw-input-color,#333333);
 				background-color: var(--aw-input-background-color,transparent);
