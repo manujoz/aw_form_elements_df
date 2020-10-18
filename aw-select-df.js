@@ -718,6 +718,18 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		}
 		this.inputVisible.innerHTML = inner;
 		
+		if( this.inputElement.value ) {
+			let title = opt.innerHTML;
+			if( title.match( /\<iron\-icon\>/) ) {
+				title = title.replace( /\<iron\-icon(\spreselected\=\"\")?\>\<\/iron\-icon\>/, "" );
+			} else if ( title.match( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"(\spreselected\=\"\")?\>/ ) ) {
+				title = title.replace( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"(\spreselected\=\"\")?\>/, "" );
+			}
+			this.setAttribute( "title", title );
+		} else {
+			this.removeAttribute( "title" );
+		}
+		
 		// Asignamos el color si corresponde
 
 		this._set_color();
