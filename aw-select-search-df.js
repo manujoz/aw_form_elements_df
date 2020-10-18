@@ -88,15 +88,15 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			.container .input_visible > img {
 				vertical-align: middle;
 				width: var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px));
-				margin-top: var(--select-visible-image-margin-top,var(--aw-select-options-image-top,-4px));
-				margin-right: var(--select-visible-image-margin-right,var(--aw-select-options-image-right,7px));
+				margin-top: var(--aw-select-visible-image-margin-top,var(--aw-select-options-image-top,-4px));
+				margin-right: var(--aw-select-visible-image-margin-right,var(--aw-select-options-image-right,7px));
 			}
 			.container .input_visible > iron-icon {
-				width: var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px));
-				height: var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px));
+				width: var(--aw-select-visible-icon-width,var(--aw-select-options-icon-width,var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px))));
+				height: var(--aw-select-visible-icon-width,var(--aw-select-options-icon-width,var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px))));
 				fill: var(--aw-select-options-color,var(--aw-input-color, #333333));
-				margin-top: var(--select-visible-icon-margin-top,var(--aw-select-options-icon-top,-2px));
-				margin-right: var(--select-visible-icon-margin-right,var(--aw-select-options-icon-right,7px));
+				margin-top: var(--aw-select-visible-icon-margin-top,var(--aw-select-options-icon-top,-2px));
+				margin-right: var(--aw-select-visible-icon-margin-right,var(--aw-select-options-icon-right,7px));
 			}
 			.container input:focus{
 				outline: 0;
@@ -241,8 +241,8 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			}
 
 			.option > iron-icon {
-				width: var(--aw-select-options-image-width,20px);
-				height: var(--aw-select-options-image-width,20px);
+				width: var(--aw-select-options-icon-width,var(--aw-select-options-image-width,20px));
+				height: var(--aw-select-options-icon-width,var(--aw-select-options-image-width,20px));
 				fill: var(--aw-select-options-color,var(--aw-input-color, #333333));
 				margin-top: var(--aw-select-options-icon-top,-2px);
 				margin-right: var(--aw-select-options-icon-right,7px);
@@ -782,17 +782,17 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		}
 		this.inputVisible.innerHTML = inner;
 		
-		if( this.inputElement.value ) {
-			let title = opt.innerHTML;
-			if( title.match( /\<iron\-icon\>/) ) {
-				title = title.replace( "<iron-icon></iron-icon>", "" );
-			} else if ( title.match( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/ ) ) {
-				title = title.replace( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/, "" );
-			}
-			this.setAttribute( "title", title );
-		} else {
-			this.removeAttribute( "title" );
-		}
+		// if( this.inputElement.value ) {
+		// 	let title = opt.innerHTML;
+		// 	if( title.match( /\<iron\-icon\>/) ) {
+		// 		title = title.replace( "<iron-icon></iron-icon>", "" );
+		// 	} else if ( title.match( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/ ) ) {
+		// 		title = title.replace( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/, "" );
+		// 	}
+		// 	this.setAttribute( "title", title );
+		// } else {
+		// 	this.removeAttribute( "title" );
+		// }
 		
 		// Asignamos el color si corresponde
 

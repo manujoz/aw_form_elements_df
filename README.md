@@ -632,6 +632,7 @@ Las variables que dan estilo a los aw-select-df se comparten con el aw-input-df,
 --aw-select-options-font-size: ( --aw-input-font-size | 16px );
 --aw-select-options-icon-right: 7px;
 --aw-select-options-icon-top: -2px;
+--aw-select-options-icon-width: ( --aw-select-options-image-width | 20px );
 --aw-select-options-image-right: 7px;
 --aw-select-options-image-top: -4px;
 --aw-select-options-image-width: 20px;
@@ -640,10 +641,11 @@ Las variables que dan estilo a los aw-select-df se comparten con el aw-input-df,
 /* Estilos de la imagen o icono seleccionada */
 
 --aw-select-visible-image-width: ( --aw-select-options-image-width | 20px );
---select-visible-image-margin-top: ( --aw-select-options-image-top | -4px);
---select-visible-image-margin-right: ( --aw-select-options-image-right | 7px);
---select-visible-icon-margin-top: ( --aw-select-options-icon-top | -2px );
---select-visible-icon-margin-right: ( --aw-select-options-icon-right | -2px );    
+--aw-select-visible-icon-width: ( --aw-select-options-icon-width | --aw-select-visible-image-width | --aw-select-options-image-width | 20px);
+--aw-select-visible-image-margin-top: ( --aw-select-options-image-top | -4px);
+--aw-select-visible-image-margin-right: ( --aw-select-options-image-right | 7px);
+--aw-select-visible-icon-margin-top: ( --aw-select-options-icon-top | -2px );
+--aw-select-visible-icon-margin-right: ( --aw-select-options-icon-right | -2px );    
 ```
 
 ___
