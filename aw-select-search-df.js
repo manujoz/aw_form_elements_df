@@ -783,7 +783,13 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		this.inputVisible.innerHTML = inner;
 		
 		if( this.inputElement.value ) {
-			this.setAttribute( "title", opt.innerHTML );
+			let title = opt.innerHTML;
+			if( title.match( /\<iron\-icon\>/) ) {
+				title = title.replace( "<iron-icon></iron-icon>", "" );
+			} else if ( title.match( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/ ) ) {
+				title = title.replace( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/, "" );
+			}
+			this.setAttribute( "title", title );
 		} else {
 			this.removeAttribute( "title" );
 		}
