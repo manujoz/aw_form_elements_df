@@ -10,13 +10,20 @@ Este paquete proporciona inputs de formualrio de Arisman Webs similares con un e
 - [aw-textarea-df](#aw-textarea-df): Un textarea.
 - [aw-input-color-df](#aw-input-color-df): Un textarea.
 
+```
+$ npm i aw_form_elements_df
+```
+Esto instalará todo los campos y componentes necesarios para usar los `aw-form`.
+
+- <a href="https://www.npmjs.com/package/aw_form" target="_blank">aw-form</a>
+- <a href="https://www.npmjs.com/package/aw_form_elements_common" target="_blank">aw-form-elements-common</a>
+- <a href="https://www.npmjs.com/package/aw_button" target="_blank">aw-button</a>
+
 Para incluir este y todos los componentes de formularios disponibles, así como los `aw_form`, `aw_button` y los `aw_form_elements_common`, bastará con añadir:
 
 ```html
 <script src="/node_modules/aw_form_elements_df/aw-form-elements-df.js"></script>
 ```
-
-De este modo ya tendremos disponible todo lo necesario para enviar y diseñar formularios de Arisman Webs.
 
 ___
 
@@ -26,7 +33,7 @@ Este es el campo básico de un input, para añadir este campo agregar:
 
 ```html
 <script src="/node_modules/aw_form_elements_df/aw-input-df.js"></script>
-<aw-input></aw-input>
+<aw-input-df></aw-input-df>
 ```
 
 Los parámetros que admite este campos son:
@@ -823,11 +830,98 @@ textarea.error_hide();
 // Devuelve un booleano en función de que el input tenga o no marcado un error.
 let error = textarea.has_error();
 ```
+___
+
+## Ejemplos de funciones externas
+
+Las funciones externas son atributos que se les pueden añadir a los componentes para que llament automáticamente a una función con algún evento concreto. Son los atributos que terminan en `*func` en cada componente, como por ejemplo, `clickfunc` or `connectedfunc`.
+
+Por ejemplo, si queremos que una función sea llamada cuando un componente ha cargado, tan solo tenemos que añadir el atributo `connectedfunc` al componente con el nombre de la función a llamar.
+
+```html
+<aw-checkbox label="Car" name="car" connectedfunc="connectedFUNC"></aw-checkbox>
+```
+```javascript
+function connectedFUNC( component )
+{
+	// This function will be called when aw-checbox is loaded
+	console.log( component );
+}
+```
+
+O por ejemmplo si queremos llamar a una función cuando un campo cambie su valor:
+
+```html
+<aw-range name="range" label="My range" min="0" max="100" step="2" value="50" showvalue changefunc="changeFUNC"></aw-range>
+```
+```javascript
+function changeFUNC( input )
+{
+	// This function will be called when aw-range value change
+	console.log( input.value );
+}
+```
+___
+
+## Creando un archivo para aplicar estilos a los componentes.
+
+Para añadir estilos personalizados a los componentes dependerá del navegador. Por ejemplo, en los navegadores basados en Chromium, podemos utilizar las variables directamente dentro del códifo CSS, pero para navegadores como Firefox deberemos crear un archivo javascript para añadir los estilos.
+
+Se recomienda para una compatiblidad absoluta crear el archivo de javascript:
 
 
+<span style="font-size:12px">index.html</span>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head></head>
+  <body>
+    <aw-input-df name="myinput" label="First"></aw-input-df>
+    <aw-input-df class="secundary" name="myinput" label="First"></aw-input-df>
+	
+	<!-- Only for not chromiun navigators -->
+	<script src="/node_modules/aw_webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+	<!-- Only for not chromiun navigators -->
+	<script type="module" src="/node_modules/aw_polymer_3/polymer/polymer-element.js"></script>
+	<script type="module" src="/node_modules/aw_form_elements_df/aw-form-elements-df"></script>
+	<script type="module" src="/my-styles.js"></script>
+  </body>
+</html>
+```
+
+<span style="font-size:12px">my-styles.js</span>
+
+```javascript
+import { html } from "/node_modules/aw_polymer_3/polymer/polymer-element.js";
+
+const theme = html`
+<custom-style>
+	<style is="custom-style">		
+		:root {
+			--aw-primary-color: #b10039;
+			--aw-primary-color-hv: #7a092d;
+			--aw-secundary-color: #e6c50a;
+			--aw-secundary-color-hv: #d89609;
+			--aw-font-family: "roboto";
+			--aw-font-size: "14px";
+			--aw-primary-text-color: #555555;
+			--aw-secundary-text-color: #F0F0F0; 
+            --aw-error-color: #a43b3b;
+            
+            aw.input-df.secundary {
+                --aw-input-border-focused: yellow;
+                --aw-input-label-color-focused: yellow;
+            }
+		}
+	</style>
+</custom-style>
+`;
+document.head.appendChild(theme.content);
+```
 ______________________________
 
 <p style="text-align: center; padding: 50px 0">
-    <b>Contacto</b><br><br>Manu J. Overa<br><a href="mailto:manu.overa@arismanwebs.es">manu.overa@arismanwebs.es</a><br><br>
-    Diseño Web - <a href="https://arismanwebs.es">Arisman Webs</a>
+    <b>Contacto</b><br><br>Manu J. Overa<br><a href="mailto:manu.giralda@gmail.com">manu.giralda@gmail.com</a><br><br>
+    <!-- Diseño Web - <a href="https://arismanwebs.es">Arisman Webs</a> -->
 </p>
