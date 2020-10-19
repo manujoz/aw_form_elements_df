@@ -6,6 +6,10 @@
 		"Arisman Webs"
 	],
 	"author": "Arisman Webs",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/manujoz/aw_form_elements_df"
+	},
 	"dependencies": {
 		"aw_button": "^2.0.0",
 		"aw_calendar": "^2.0.0",
