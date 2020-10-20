@@ -95,16 +95,8 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 				width: var(--aw-select-visible-icon-width,var(--aw-select-options-icon-width,var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px))));
 				height: var(--aw-select-visible-icon-width,var(--aw-select-options-icon-width,var(--aw-select-visible-image-width,var(--aw-select-options-image-width,20px))));
 				fill: var(--aw-select-options-color,var(--aw-input-color, #333333));
-				margin-top: var(--aw-select-visible-icon-margin-top,var(--aw-select-options-icon-top,-2px));
-				margin-right: var(--aw-select-visible-icon-margin-right,var(--aw-select-options-icon-right,7px));
-			}
-			.container input:focus{
-				outline: 0;
-				border-top: var(--aw-input-border-top-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
-				border-right: var(--aw-input-border-right-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
-				border-bottom: var(--aw-input-border-bottom-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
-				border-left: var(--aw-input-border-left-focused,var(--aw-input-border-focused,solid 1px var(--aw-primary-color,#1C7CDD)));
-				background-color: var(--aw-input-background-color-focused,var(--aw-input-background-color,transparent));
+				margin-top: var(--select-visible-icon-margin-top,var(--aw-select-options-icon-top,-2px));
+				margin-right: var(--select-visible-icon-margin-right,var(--aw-select-options-icon-right,7px));
 			}
 			.container .input_visible[error]{
 				border-top: var(--aw-input-border-top-error,var(--aw-input-border-error,solid 1px var(--aw-error-color,#1C7CDD)));
@@ -260,7 +252,6 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		<div id="label" hidden="{{!label}}">{{label}}</div>
 
 		<div id="container" class="container">
-			<!-- <label><input value$="{{value}}" disabled$="[[disabled]]" readonly on-focusin="_open_options" /></label> -->
 			<label><input class="ghost" readonly on-focusin="_open_options" /></label>
 			<div class="input_visible"disabled$="[[disabled]]"></div>
 			<iron-icon icon="arrow-drop-down"></iron-icon>
@@ -384,7 +375,6 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		// Asignamos los inputs del componente
 
 		this.inputElement = this.shadowRoot.querySelector( ".hidden input" );
-		// this.inputVisible = this.shadowRoot.querySelector( "#container input" );
 		this.inputVisible = this.shadowRoot.querySelector( ".input_visible" );
 		this.inputSearch = this.shadowRoot.querySelector( ".search input" );
 
@@ -754,6 +744,10 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			var opt = el;
 		}
 
+		while( opt.tagName !== "DIV" ) {
+			opt = opt.parentElement;
+		}
+
 		// Asiganmos el value
 
 		var value = opt.getAttribute( "value" );
@@ -781,18 +775,6 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 			inner = '<iron-icon icon="' + opt.dataset.icon + '"></iron-icon>' + clone.innerHTML;
 		}
 		this.inputVisible.innerHTML = inner;
-		
-		// if( this.inputElement.value ) {
-		// 	let title = opt.innerHTML;
-		// 	if( title.match( /\<iron\-icon\>/) ) {
-		// 		title = title.replace( "<iron-icon></iron-icon>", "" );
-		// 	} else if ( title.match( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/ ) ) {
-		// 		title = title.replace( /\<img\s+src\=\"[A-z0-9À-ÿ\\\%\s\/\.\:\-\_]+\"\>/, "" );
-		// 	}
-		// 	this.setAttribute( "title", title );
-		// } else {
-		// 	this.removeAttribute( "title" );
-		// }
 		
 		// Asignamos el color si corresponde
 
