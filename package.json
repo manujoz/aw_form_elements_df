@@ -1,11 +1,15 @@
 {
 	"name": "aw_form_elements_df",
-	"version": "2.1.6",
+	"version": "2.1.7",
 	"description": "Componentes de formulario estilo Arisman Webs",
 	"keywords": [
-		"Arisman Webs"
+		"Polymer",
+		"Web Components",
+		"Forms Polymer",
+		"Forms web components",
+		"Inputs web components"
 	],
-	"author": "Arisman Webs",
+	"author": "Manu Overa",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/manujoz/aw_form_elements_df"
