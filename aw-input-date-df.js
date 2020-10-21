@@ -397,7 +397,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					<div class="calendar">
 						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit={{value}}></aw-calendar-simple>
 					</div>
-					<div class="ok">
+					<div class="ok" on-click="_close_calendar">
 						<iron-icon icon="check"></iron-icon>
 					</div>
 				</div>
