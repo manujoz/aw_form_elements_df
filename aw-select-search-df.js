@@ -678,7 +678,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	 * Cierra las opciones del componente
 	 */
 	_close_options( ev ) {
-		if( ev && ev.path && ev.path[ 1 ].classList.contains( "search" )) {
+		if( ev && ev.path && ev.path[ 1 ] && ev.path[ 1 ].classList && ev.path[ 1 ].classList.contains( "search" )) {
 			return false;
 		}
 		
