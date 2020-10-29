@@ -740,12 +740,12 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 
 		if( ev ) {
 			var opt = ev.target;
+
+			while( opt.tagName !== "DIV" ) {
+				opt = opt.parentElement;
+			}
 		} else {
 			var opt = el;
-		}
-
-		while( opt.tagName !== "DIV" ) {
-			opt = opt.parentElement;
 		}
 
 		// Asiganmos el value
