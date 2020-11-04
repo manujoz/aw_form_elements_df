@@ -396,7 +396,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 						<iron-icon icon="event"></iron-icon>{{titcalendar}}
 					</div>
 					<div class="calendar">
-						<aw-calendar-simple unresolved name="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit={{value}}></aw-calendar-simple>
+						<aw-calendar-simple unresolved name$="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit$={{value}}></aw-calendar-simple>
 					</div>
 					<div class="ok" on-click="_close_calendar">
 						<iron-icon icon="check"></iron-icon>
@@ -417,7 +417,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 			openCal: {type: Boolean, value: false },
 			lang: { type: String, value: "es" },
-			nameCalendar: { type: String, value: "" },
 			titcalendar: { type: String, value: "Selecciona una fecha" },
 			time: { type: Boolean, value: false },
 			nomarktoday: { type: Boolean, value: false },
@@ -476,8 +475,8 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		super();
 
 		// Asignamos el nombre del calendario
-
-		this.nameCalendar = "aw-input-date:" + this.name + ( Math.floor(Math.random() * (100000 - 100)) );
+		this.resolved = false;
+		this.nameCalendar = "aw-input-date:" + this.getAttribute( "name" ) + ( Math.floor(Math.random() * (100000 - 100)) );
 	}
 
 	/**
@@ -529,6 +528,18 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		// Resolvemos
 
 		this.removeAttribute( "unresolved" );
+
+		setTimeout(() => {
+			this.resolved = true;
+
+			let calendar = this.shadowRoot.querySelector( "aw-calendar-simple" );
+			let date = calendar.get_date();
+			
+			if( date ) {
+				this.inputElement.value = date.string;
+				this.inputVisible.value = date.format[ this.formatdate ];
+			}
+		}, 700);
 	}
 
 	/**
@@ -747,6 +758,10 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 */
 	_select_date( ev ) {
 		let response = ev.detail.date;
+
+		if( !this.resolved ) {
+			return;
+		}
 
 		if( response.name !== this.nameCalendar ) {
 			return false;
