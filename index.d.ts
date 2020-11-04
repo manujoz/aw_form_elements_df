@@ -233,6 +233,15 @@ interface AwInputDate extends HTMLElement {
 	has_error() : boolean;
 
 	/**
+	 * @method	set_value
+	 * 
+	 * Asigna el valor al campo
+	 * 
+	 * @param {string} value Valor que queremos asignar al campo
+	 */
+	set_value( value: string ) : void;
+
+	/**
 	 * @method	focus
 	 * 
 	 * Pone el foco sobre el input.
