@@ -1,11 +1,11 @@
-import { PolymerElement, html, Polymer } 		from "../aw_polymer_3/polymer/polymer-element.js";
+import { PolymerElement, html } 		from "../aw_polymer_3/polymer/polymer-element.js";
 import { AwInputErrorMixin } 			from "../aw_form_mixins/aw-input-error-mixin.js";
 import { AwInputPrefixMixin } 			from "../aw_form_mixins/aw-input-preffix-mixin.js";
 import { AwFormValidateMixin } 			from "../aw_form_mixins/aw-form-validate-mixin.js";
 import { AwExternsFunctionsMixin } 		from "../aw_extern_functions/aw-extern-functions-mixin.js";
 
+import "./helpers/aw-input-popup-calendar.js";
 import "../aw_form_helpers/aw-input-error.js";
-import "../aw_calendar/aw-calendar-simple.js";
 import "../aw_polymer_3/iron-icons/iron-icons.js";
 
 class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement )))) {
@@ -242,119 +242,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					flex-grow: 0;
 					flex-basis: auto;
 				}
-
-				/* #region Fondo negro y calendario */
-
-				.fondo {
-					position: fixed;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					background-color: var(--aw-input-date-calendar-fondo---aw-calendar-selected-background-color,rgba(10,10,10,.7));
-					z-index: 1000;
-					display: none;
-				}
-
-				.cont_calendar {
-					position: fixed;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					flex-flow: row wrap;
-					align-items: center;
-					justify-content: center;
-					z-index: 1000;
-					display: none;
-				}
-				.cont_calendar[open] {
-					display: flex;
-				}
-				.cont_calendar .close {
-					position: absolute;
-					top:0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-				}
-				.cont_calendar .popup {
-					position: relative;
-					width: 0;
-					background-color: white;
-				}
-				.cont_calendar[open] .popup {
-					animation: aw-input-date-df-open .3s forwards;
-				}
-				.cont_calendar .title {
-					position: relative;
-					padding: var(--aw-input-date-calendar-tit-padding,32px 10px 30px);
-					margin: var(--aw-input-date-calendar-tit-margin,0);
-					text-align: var(--aw-input-date-calendar-tit-text-align,center);
-					font-size: var(--aw-input-date-calendar-tit-font-size,11px);
-					color: var(--aw-input-date-calendar-tit-color,white);
-					background-color: var(--aw-input-date-calendar-tit-background-color,var(--aw-primary-color,#1C7CDD));
-					text-transform: var(--aw-input-date-calendar-tit-text-transform,uppercase);
-				}
-				.cont_calendar .title iron-icon {
-					top: var(--aw-input-date-calendar-tit-icon-top,-2px);
-					width: var(--aw-input-date-calendar-tit-icon-size,18px);
-					height: var(--aw-input-date-calendar-tit-icon-size,18px);
-					fill: var(--aw-input-date-calendar-color,white);
-					margin: 0 5px 0 0;
-				}
-				.cont_calendar .calendar {
-					position: relative;
-					padding: 10px;
-				}
-				.cont_calendar aw-calendar-simple {
-					width: 100%;
-				}
-				.cont_calendar[open] .title, .cont_calendar[open] .calendar {
-					animation: aw-input-date-df-show .3s forwards;
-				}
-
-				.cont_calendar .ok {
-					position: relative;
-					padding: 5px 0 5px;
-					text-align: center;
-					background-color: #EAEAEA;
-					cursor: pointer;
-					transition: background .3s;
-				}
-
-				.cont_calendar .ok:hover {
-					background-color: #73bb39;
-				}
-
-				.cont_calendar .ok iron-icon {
-					width: 24px;
-					height: 24px;
-					fill: #73bb39;
-					transition: fill .3s;
-				}
-				.cont_calendar .ok:hover iron-icon {
-					fill: white;
-				}
-
-				@keyframes aw-input-date-df-open {
-					from {
-						width: 0;
-						overflow: hidden;
-					}
-
-					to {
-						width: 280px;
-					}
-				}
-				@keyframes aw-input-date-df-show {
-					from {
-						opacity: 0;
-					}
-					to {
-						opacity: 1;
-					}
-				}
 			</style>
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
@@ -387,22 +274,8 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					readonly
 					/>
 			</div>
-			
-			<div class="fondo"></div>
-			<div class="cont_calendar">
-				<div class="close" on-click="_close_calendar"></div>
-				<div class="popup">
-					<div class="title">
-						<iron-icon icon="event"></iron-icon>{{titcalendar}}
-					</div>
-					<div class="calendar">
-						<aw-calendar-simple unresolved name$="{{nameCalendar}}" lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit$={{value}}></aw-calendar-simple>
-					</div>
-					<div class="ok" on-click="_close_calendar">
-						<iron-icon icon="check"></iron-icon>
-					</div>
-				</div>
-			</div>
+
+			<aw-input-popup-calendar id="ppCalendar" namecalendar$="{{nameCalendar}}" open={{open}} lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit$={{value}}></aw-input-popup-calendar>
 		`;
 	}
 
@@ -415,7 +288,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 			// Atributos del calendario
 
-			openCal: {type: Boolean, value: false },
+			open: { type: Boolean, value: false },
 			lang: { type: String, value: "es" },
 			titcalendar: { type: String, value: "Selecciona una fecha" },
 			time: { type: Boolean, value: false },
@@ -532,7 +405,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		setTimeout(() => {
 			this.resolved = true;
 
-			let calendar = this.shadowRoot.querySelector( "aw-calendar-simple" );
+			let calendar = this.$.ppCalendar.calendar;
 			let date = calendar.get_date();
 			
 			if( date ) {
@@ -716,39 +589,11 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 * Abre el calendario de selección de fecha.
 	 */
 	_open_calendar() {
-		if( this.openCal ) {
-			return;
-		}
-		this.openCal = true;
-
-		let fondo = this.shadowRoot.querySelector( ".fondo" );
-		let container = this.shadowRoot.querySelector( ".cont_calendar" );
-
-		let calendar = this.shadowRoot.querySelector( "aw-calendar-simple" );
-		let date = calendar.get_date();
-		
-		if( date ) {
-			this.inputElement.value = date.string;
-			this.inputVisible.value = date.format[ this.formatdate ];
+		if( this.$.ppCalendar.parentElement?.tagName !== "BODY" ) {
+			document.body.appendChild( this.$.ppCalendar );
 		}
 
-		Polymer.Fade.in( fondo, { speed: 200 } );
-		container.setAttribute( "open", "" );
-	}
-
-	/**
-	 * @method	_close_calendar
-	 * 
-	 * Cierra el calendario de selección de fecha.
-	 */
-	_close_calendar() {
-		this.openCal = false;
-		
-		let fondo = this.shadowRoot.querySelector( ".fondo" );
-		let container = this.shadowRoot.querySelector( ".cont_calendar" );
-		
-		Polymer.Fade.out( fondo, {speed: 200 } );
-		container.removeAttribute( "open" );
+		this.open = true;
 	}
 
 	/**
