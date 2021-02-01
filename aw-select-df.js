@@ -169,7 +169,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
                 novalidate$=[[novalidate]]
 				/>
 		</div>
-		<aw-select-options options={{options}} open={{open}}></aw-select-options>
+		<aw-select-options searchable="{{searchable}}" options="{{options}}" open="{{open}}"></aw-select-options>
 		`;
 	}
 
@@ -191,6 +191,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			// Atributos especiales del aw-select
 			noink: { type: Boolean, value: false },
 			autofocus: { type: Boolean, value: false },
+			searchable: { type: Boolean, value: false },
 			noink: { type: Boolean, value: false },
 			selectedindex: { type: Number, value: 0, observer: "_handleSelectedIndex" },
 			selectedvalue: { type: String, value: "", observer: "_handleSelectedValue" },
@@ -329,6 +330,12 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		this._create();
 	}
 
+	/**
+	 * @method	setSelected
+	 * 
+	 * @param {{value:string,inner:string,iron:string,image:string,title:string,selected:boolean}} option 
+	 * @param {boolean} change 
+	 */
 	setSelected(option, change = true) {
 		this.inputElement.value = option.value;
 

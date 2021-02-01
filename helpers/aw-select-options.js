@@ -1,5 +1,6 @@
 import { PolymerElement, html, Polymer } from "../../aw_polymer_3/polymer/polymer-element.js";
 import "./aw-select-option.js"
+import "../../aw_polymer_3/iron-icons/iron-icons.js"
 
 class AwSelectOptions extends PolymerElement {
     static get template() {
@@ -12,6 +13,28 @@ class AwSelectOptions extends PolymerElement {
                 display: none;
                 position: absolute;
             }
+			#search {
+				position: relative;
+				border-bottom: solid 1px #DDDDDD;
+			}
+			#search input {
+				padding: 7px 25px 7px 5px;
+				width: 100%;
+				border: none;
+				font-size: var(--aw-input-font-size, 16px);
+				box-sizing: border-box;
+			}
+			#search input:focus {
+				outline: 0;
+			}
+			#search iron-icon {
+				position: absolute;
+				top: 6px;
+				right: 1px;
+				width: 18px;
+				height: 18px;
+				color: #777777;
+			}
 			#options {
 				color: var(--aw-select-options-color,var(--aw-input-color, #333333));
 				max-height: 400px;
@@ -36,9 +59,15 @@ class AwSelectOptions extends PolymerElement {
 				background-color: #999999;
 			}
         </style>
+        <template is="dom-if" if="[[searchable]]">
+            <div id="search">
+                <input placeholder="Buscar" on-input="_filterValue">
+                <iron-icon icon="search"></iron-icon>
+            </div>
+        </template>
         <div id="options">
-            <template is="dom-repeat" items="{{options}}" as="option">
-                <aw-select-option option={{option}} on-click="_optionSelected" on-mouseenter="_optionMouseEnter"></aw-select-option>
+            <template is="dom-repeat" items="{{options}}" as="option" filter="{{_filter(stringSearch)}}">
+                <aw-select-option option="{{option}}" on-click="_optionSelected" on-mouseenter="_optionMouseEnter"></aw-select-option>
             </template>
         </div>
         `;
@@ -46,8 +75,9 @@ class AwSelectOptions extends PolymerElement {
 
     static get properties() {
         return {
-            options: { type: Array, value: [], observer: "_handleOptions" },
-            open: { type: Boolean, value: false, notify: true, observer: "_handleOpen" },
+            options: { type: Array, observer: "_handleOptions" },
+            open: { type: Boolean, notify: true, observer: "_handleOpen" },
+            searchable: { type: Boolean },
         }
     }
 
@@ -57,6 +87,10 @@ class AwSelectOptions extends PolymerElement {
     constructor() {
         super();
 
+        this.options = [];
+        this.open = false;
+        this.searchable = false;
+
         this.height = 0;
         this.width = 0;
         this.writtedopen = "";
@@ -64,6 +98,8 @@ class AwSelectOptions extends PolymerElement {
 
         /** @type {AwSelect} */
         this.select = null;
+
+        this.stringSearch = "";
     }
 
     /**
@@ -73,7 +109,13 @@ class AwSelectOptions extends PolymerElement {
         super.connectedCallback();
 
 		// Listener del document y teclado
-		this.listenDoc = () => {this.open = false};
+		this.listenDoc = (ev) => {
+            if(ev.path[1] === this.shadowRoot.querySelector("#search")) {
+                return false;
+            }
+
+            this.open = false
+        };
 		this.listenKeys = (ev) => {this._handleKeys(ev)};
     }
 
@@ -132,6 +174,62 @@ class AwSelectOptions extends PolymerElement {
         if( preselected ) {
             preselected.removeAttribute("preselected");
         }
+
+        this._filterReset();
+    }
+
+    /**
+     * @method  _filter
+     * 
+     * Filtra los resultados cuando es tipo search
+     * 
+     * @param {string} string 
+     */
+    _filter(string) {
+        const repostion = () => {
+			var options = this.$.options;
+			let diff = options.offsetHeight + this.scrolltop - this.inputVisible.offsetHeight;
+			options.style.marginTop = "-" + diff + "px";
+        }
+        
+        if(!string) {
+            return null;
+        } else {
+            string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            
+            return option => {
+                const value = option.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                const inner = option.inner.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+                return (value.indexOf( string ) != -1 || inner.indexOf(string) != -1);
+            }
+        }
+    }
+
+    /**
+     * @method  _filterReset
+     * 
+     * Resetea las opciones de búsqueda
+     */
+    _filterReset() {
+        if( !this.searchable) {
+            return;
+        }
+        this.stringSearch = "";
+        this.shadowRoot.querySelector("#search input").value = "";
+        this._filter();
+    }
+
+    /**
+     * @method  _filterValue
+     * 
+     * Filtra el valor de las opciones de búsqueda
+     */
+    _filterValue() {
+        this.stringSearch = this.shadowRoot.querySelector("#search input").value;
+        setTimeout(() => {
+            this._setReposition();
+        }, 50);
     }
 
     /**
@@ -234,16 +332,31 @@ class AwSelectOptions extends PolymerElement {
      * 
      * @param {event} ev 
      */
-    _handleKeys(ev) {
-        ev.preventDefault();
+    _handleKeys(ev) {        
+        // Paramos si estamos escribiendo sobre el buscador
+        if( ev.path[0] === this.shadowRoot.querySelector("#search input") && ev.key !== "ArrowUp" && ev.key !== "ArrowDown" && ev.key !== "Enter") {
+            return;
+        }
         
+        // Prevenimos el efecto
+        ev.preventDefault();
+
         const options = this.$.options.querySelectorAll("aw-select-option");
+        if(options.length === 0) {
+            return;
+        }
+
         const selected = this.$.options.querySelector("aw-select-option[selected]");
         let preselected = this.$.options.querySelector("aw-select-option[preselected]");
         
         if( !preselected ) {
-            selected.setAttribute("preselected", "");
-            preselected = selected;
+            if(selected) {
+                selected.setAttribute("preselected", "");
+                preselected = selected;
+            } else {
+                options[0].setAttribute("preselected", "");
+                preselected = options[0];
+            }
         }
         
         // Si pulamos arriba
@@ -295,9 +408,13 @@ class AwSelectOptions extends PolymerElement {
             next.setAttribute( "preselected", "" );
             this._keepPreselectedVisible(next);
 		} else if( ev.key === "Enter" ) {
-			preselected.removeAttribute( "preselected" );
-			this._optionSelected({target: preselected});
-			this.open = false;
+            if( !preselected ) {
+                return;
+            }
+
+            preselected.removeAttribute( "preselected" );
+            this._optionSelected({target: preselected});
+            this.open = false;
         } else { 
 			// Creamos la palabra escrita
 			this.writtedopen = ev.key === "Backspace" ? "" : this.writtedopen + ev.key.toLowerCase();
@@ -415,6 +532,10 @@ class AwSelectOptions extends PolymerElement {
             // Vamos a la opción seleccionada
             this._scrollToSelected();
         });
+
+        if( this.searchable ) {
+            this.shadowRoot.querySelector("#search input").focus();
+        }
         
         // Activamos las escuchas 
         this._addListeners();
@@ -446,18 +567,33 @@ class AwSelectOptions extends PolymerElement {
      * @param {event} ev 
      */
     _optionSelected(ev) {
+        this._filterReset();
+
         const target = ev.target;
-            
+        
         if( !this.select ) {
             this.select = this.parentNode.host;
         }
         
+        const option = {...target.option};
+
         this.select.setSelected(target.option);
-        
+
         setTimeout(() => {
             const selected = this.$.options.querySelector("aw-select-option[selected]");
             selected.removeAttribute("selected");
-            target.setAttribute("selected", "");
+            if(target.option.value === option.value) {
+                target.setAttribute("selected", "");
+            } else {
+                const options = this.$.options.querySelectorAll("aw-select-option");
+                for( let i = 0; i < options.length; i++ ) {
+                    if( options[i].option.value === option.value) {
+                        options[i].setAttribute("selected", "");
+                        options[i].setAttribute("preselected", "");
+                        break;
+                    }
+                }
+            }
         }, 150);
     }
 
@@ -516,6 +652,24 @@ class AwSelectOptions extends PolymerElement {
         
         this.style.top = top + "px";
         this.style.left = left + "px";
+    }
+
+    /**
+     * @method  _setReposition
+     * 
+     * Reposiciona las opciones cuando se escribe en el input de búsqueda
+     */
+    _setReposition()  {
+        const scrollTop = this._getScrollTop();
+        const position = this.select.getBoundingClientRect();
+        const searchHeight = this.shadowRoot.querySelector("#search").offsetHeight;
+
+        let top = position.top + scrollTop;
+        if( position.top + this.$.options.offsetHeight + searchHeight > window.innerHeight ) {
+            top -= (position.top + this.$.options.offsetHeight + searchHeight ) - window.innerHeight + 10;
+        }
+        
+        this.style.top = top + "px";
     }
 }
 

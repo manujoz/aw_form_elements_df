@@ -103,6 +103,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					background-color: var(--aw-input-background-color-disabled,#F9F9F9);
 				}
 				.container input:-webkit-autofill {
+					box-shadow:0 0 0px 1000px white inset !important;
 					-webkit-box-shadow: 0 0 0px 1000px white inset !important;
 					-webkit-text-fill-color: var(--aw-input-color, #111111);
 				}
