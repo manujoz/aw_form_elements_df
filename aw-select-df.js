@@ -169,7 +169,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
                 novalidate$=[[novalidate]]
 				/>
 		</div>
-		<aw-select-options searchable="{{searchable}}" options="{{options}}" open="{{open}}"></aw-select-options>
+		<aw-select-options class$="{{classOptions}}" searchable="{{searchable}}" options="{{options}}" open="{{open}}"></aw-select-options>
 		`;
 	}
 
@@ -187,6 +187,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 
 			// Atributos de diseño
 			label: { type: String },
+			classOptions: { type: String },
 
 			// Atributos especiales del aw-select
 			noink: { type: Boolean, value: false },
