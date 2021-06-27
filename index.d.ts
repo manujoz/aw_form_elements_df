@@ -2,38 +2,45 @@ interface AwInput extends HTMLElement {
 	inputElement: HTMLInputElement;
 
 	/**
-	 * @method error_hide
+	 * @method	clear
+	 * 
+	 * Limpia el componente
+	 */
+	clear(): void;
+
+	/**
+	 * @method errorHide
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
-	error_hide() : void;
+	errorHide() : void;
 
 	/**
-	 * @method error_show
+	 * @method errorShow
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
 	 * @param {string} message Mensaje de error que se va a mostrar
 	 */
-	error_show( message: string ) : void;
+	errorShow( message: string ) : void;
 
 	/**
-	 * @method get_value
+	 * @method getValue
 	 * 
 	 * Obtiene el valor del input
 	 * 
 	 * @return {string}
 	 */
-	get_value() : string;
+	getValue() : string;
 
 	/**
-	 * @method	has_error
+	 * @method	hasError
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
-	has_error() : boolean;
+	hasError() : boolean;
 
 	/**
 	 * @method	focus
@@ -41,6 +48,13 @@ interface AwInput extends HTMLElement {
 	 * Pone el foco sobre el input.
 	 */
 	focus() : void
+
+	/**
+	 * @method	setValue
+	 * 
+	 * Pone el foco sobre el input.
+	 */
+	setValue( value: string|number ) : void
 }
 
 declare var AwInput: {
@@ -55,6 +69,7 @@ interface AwSelect extends HTMLElement {
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -62,6 +77,7 @@ interface AwSelect extends HTMLElement {
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -71,6 +87,7 @@ interface AwSelect extends HTMLElement {
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -80,6 +97,7 @@ interface AwSelect extends HTMLElement {
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
@@ -88,11 +106,72 @@ interface AwSelect extends HTMLElement {
 	has_error() : boolean;
 
 	/**
+	 * @method	clear
+	 * 
+	 * Pone el select en la primera opción
+	 */
+	clear(): void;
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide() : void;
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message: string ) : void;
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue() : string;
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError() : boolean;
+
+	/**
 	 * @method	reload
 	 * 
 	 * Refresca los options dentro del componente si cambiaron en el aw-select
 	 */
 	reload() : void;
+
+	/**
+	 * @method toIndex
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} index Índidce de la opción del select que queremos seleccionar
+	 * @param {boolean} notify [false] Índica si debe notificar el evento de cambio
+	 */
+	toIndex(index: number, notify: boolean) : void;
+
+	/**
+	 * @method toValue
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} value Valor de la opción del select que queremos seleccionar
+	 * @param {boolean} notify [false] Índica si debe notificar el evento de cambio
+	 */
+	toValue(value: string, notify: boolean) : void;
 }
 
 declare var AwSelect: {
@@ -105,6 +184,7 @@ interface AwInputColor extends HTMLElement {
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -112,6 +192,7 @@ interface AwInputColor extends HTMLElement {
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -121,6 +202,7 @@ interface AwInputColor extends HTMLElement {
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -130,12 +212,54 @@ interface AwInputColor extends HTMLElement {
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error() : boolean;
+
+	/**
+	 * @method	clear
+	 * 
+	 * Limpia el componente
+	 */
+	clear(): void;
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide() : void;
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message: string ) : void;
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue() : string;
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError() : boolean;
 }
 
 declare var AwInputColor: {
@@ -150,6 +274,7 @@ interface AwSelectSearch extends HTMLElement {
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -157,6 +282,7 @@ interface AwSelectSearch extends HTMLElement {
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -166,6 +292,7 @@ interface AwSelectSearch extends HTMLElement {
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -175,6 +302,7 @@ interface AwSelectSearch extends HTMLElement {
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
@@ -183,11 +311,72 @@ interface AwSelectSearch extends HTMLElement {
 	has_error() : boolean;
 
 	/**
+	 * @method	clear
+	 * 
+	 * Pone el select en la primera opción
+	 */
+	clear(): void;
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide() : void;
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message: string ) : void;
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue() : string;
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError() : boolean;
+
+	/**
 	 * @method	reload
 	 * 
 	 * Refresca los options dentro del componente si cambiaron en el aw-select
 	 */
 	reload() : void;
+
+	/**
+	 * @method toIndex
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} index Índidce de la opción del select que queremos seleccionar
+	 * @param {boolean} notify [false] Índica si debe notificar el evento de cambio
+	 */
+	toIndex(index: number, notify: boolean) : void;
+
+	/**
+	 * @method toValue
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} value Valor de la opción del select que queremos seleccionar
+	 * @param {boolean} notify [false] Índica si debe notificar el evento de cambio
+	 */
+	toValue(value: string, notify: boolean) : void;
 }
 
 declare var AwSelectSearch: {
@@ -199,7 +388,15 @@ interface AwInputDate extends HTMLElement {
 	inputElement: HTMLInputElement;
 
 	/**
+	 * @method clear
+	 * 
+	 * Limpia la fehca del calencario
+	 */
+	clear(): void;
+
+	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -207,6 +404,7 @@ interface AwInputDate extends HTMLElement {
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -216,6 +414,7 @@ interface AwInputDate extends HTMLElement {
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -225,6 +424,7 @@ interface AwInputDate extends HTMLElement {
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
@@ -234,12 +434,56 @@ interface AwInputDate extends HTMLElement {
 
 	/**
 	 * @method	set_value
+	 * @deprecated
 	 * 
 	 * Asigna el valor al campo
 	 * 
 	 * @param {string} value Valor que queremos asignar al campo
 	 */
 	set_value( value: string ) : void;
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide() : void;
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message: string ) : void;
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue() : string;
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError() : boolean;
+
+	/**
+	 * @method	setValue
+	 * 
+	 * Asigna el valor al campo
+	 * 
+	 * @param {string} value Valor que queremos asignar al campo
+	 */
+	setValue( value: string ) : void;
 
 	/**
 	 * @method	focus
@@ -259,6 +503,7 @@ interface AwInputFile extends HTMLElement {
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -266,6 +511,7 @@ interface AwInputFile extends HTMLElement {
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -275,6 +521,7 @@ interface AwInputFile extends HTMLElement {
 
 	/**
 	 * @method	get_files
+	 * @deprecated
 	 * 
 	 * Obtiene los archivos cargados en el input
 	 */
@@ -282,6 +529,7 @@ interface AwInputFile extends HTMLElement {
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -291,12 +539,61 @@ interface AwInputFile extends HTMLElement {
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error() : boolean;
+
+	/**
+	 * @method	clear
+	 * 
+	 * Pone el select en la primera opción
+	 */
+	clear(): void;
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide() : void;
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message: string ) : void;
+
+	/**
+	 * @method	getFiles
+	 * 
+	 * Obtiene los archivos cargados en el input
+	 */
+	getFiles() : FileList
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue() : string;
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError() : boolean;
 
 	/**
 	 * @method	focus
@@ -316,6 +613,7 @@ interface AwTextArea extends HTMLElement {
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -323,6 +621,7 @@ interface AwTextArea extends HTMLElement {
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -332,6 +631,7 @@ interface AwTextArea extends HTMLElement {
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -341,12 +641,54 @@ interface AwTextArea extends HTMLElement {
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error() : boolean;
+
+	/**
+	 * @method	clear
+	 * 
+	 * Pone el select en la primera opción
+	 */
+	clear(): void;
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide() : void;
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message: string ) : void;
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue() : string;
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError() : boolean;
 
 	/**
 	 * @method	focus

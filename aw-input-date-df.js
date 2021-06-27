@@ -246,7 +246,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
 				<label><input readonly autocomplete="off" placeholder="[[placeholder]]" on-focusin="_focusin" on-focusout="_focusout"/></label>
-				<iron-icon id="clear" icon="clear" on-click="_clear"></iron-icon>
+				<iron-icon id="clear" icon="clear" on-click="clear"></iron-icon>
 			</div>
 			<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
 
@@ -275,20 +275,13 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					/>
 			</div>
 
-			<aw-input-popup-calendar id="ppCalendar" namecalendar$="{{nameCalendar}}" open={{open}} lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit$={{value}}></aw-input-popup-calendar>
+			<aw-input-popup-calendar id="ppCalendar" namecalendar$="{{nameCalendar}}" open={{_open}} lang="{{lang}}" time={{time}} nomarktoday="{{nomarktoday}}" nomarkfest="{{nomarkfest}}" noselectpast={{noselectpast}} noselectsat={{noselectsat}} noselectsun={{noselectsun}} noselectfest={{noselectfest}} ccaa={{ccaa}} diasfest={{diasfest}} fechainit$={{value}}></aw-input-popup-calendar>
 		`;
 	}
 
 	static get properties() {
 		return {
-			// Atributos del componente
-
-			inputElement: { type: Object },
-			inputVisible: { type: Object },
-
 			// Atributos del calendario
-
-			open: { type: Boolean, value: false },
 			lang: { type: String, value: "es" },
 			titcalendar: { type: String, value: "Selecciona una fecha" },
 			time: { type: Boolean, value: false },
@@ -302,7 +295,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			diasfest: { type: Array, value: "" },
 
 			// Atributos básicos del input
-
 			id: { type: String },
 			name: { type: String },
 			placeholder: { type: String },
@@ -314,13 +306,11 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			autocomplete: { type: String },
 
 			// Atributos de diseño
-
 			label: { type: String },
 			autofocus: { type: Boolean, value: false },
 			formatdate: { type: String, value: "numeric" }, // (numeric,numericHour,long,longDay,longFull,longHour,short,shortDay,shortFull,shortHour)
 
 			// Atrtibutos de validación
-
 			required: { type: Boolean, value: false },
 			isdate: { type: String },
 			dateprevius: { type: Boolean, value: false },
@@ -328,24 +318,27 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			maxage: { type: String },
 			novalidate: { type: Boolean, value: false },
 			validateonchange: { type: Boolean, value: false },
-			
-			// Funciones de escucha
 
-			listenFuncs: { type: Object },
-
-			// Atributos de control
-
-			valueInit: { type: String },
+			_open: { type: Boolean, value: false },
 
 			// Relación con el aw-form y el form
-
 			parentForm: { type: Object },
-			noregister: { type: Boolean, value: false }
+			noregister: { type: Boolean, value: false },
 		};
 	}
 
 	constructor() {
 		super();
+
+		/** @type {HTMLInputElement} */
+		this.inputElement = undefined;
+		/** @type {HTMLInputElement} */
+		this.inputVisible = undefined;
+
+		this.valueInit = "";
+
+		// Funciones de escucha
+		this.listenFuncs = {};
 
 		// Asignamos el nombre del calendario
 		this.resolved = false;
@@ -412,7 +405,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 				this.inputElement.value = date.string;
 				this.inputVisible.value = date.format[ this.formatdate ];
 			}
-		}, 700);
+		}, 200);
 	}
 
 	/**
@@ -433,19 +426,45 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 		document.removeEventListener( "aw-calendar-simple", this.listenFuncs.calendar );
 	}
+	
+	/**
+	 * @method	clear
+	 * 
+	 * Limpia la fecha del input.
+	 */
+	clear() {
+		this.inputElement.value = "";
+		this.inputVisible.value ="";
+
+		this.$.clear.style.display = "none";
+			
+		this._change();
+	}
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
 	error_hide()
+	{
+		this.errorHide();
+	}
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide()
 	{
 		this.inputElement.setAttribute( "errmsg", "" );
 	}
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -453,11 +472,24 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 */
 	error_show( message )
 	{
+		this.errorShow(message);
+	}
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message )
+	{
 		this.inputElement.setAttribute( "errmsg", message );
 	}
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -465,17 +497,42 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 */
 	get_value()
 	{
+		return this.getValue();
+	}
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue()
+	{
 		return this.inputElement.value;
 	}
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error()
+	{
+		return this.hasError();
+	}
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError()
 	{
 		if( this.inputElement.getAttribute( "errmsg" )) {
 			return true;
@@ -495,6 +552,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 	/**
 	 * @method	set_value
+	 * @deprecated
 	 * 
 	 * Asigna el valor al campo
 	 * 
@@ -502,13 +560,25 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 */
 	set_value( value )
 	{
-		if( !value.match( /^([0-9]{4}\-((1[0-2])|(0?[1-9]))\-((0?[1-9])|(1[0-9])|(2[0-9])|(3[0-1])))(\s((0?[0-9])|(1[0-9])|(2[0-3]))\:((0?[0-9])|([1-5][0-9])))?$/) ) {
+		this.setValue(value);
+	}
+
+	/**
+	 * @method	setValue
+	 * 
+	 * Asigna el valor al campo
+	 * 
+	 * @param {string} value Valor que queremos asignar al campo
+	 */
+	setValue( value )
+	{
+		if(!this._isValidDate()) {
 			console.error( "[aw-input-date.js#set_value]: You have not passed a correct date" );
 			return;
 		}
 
 		/** @type {AwCalendarSimple} */
-		let calendar = this.shadowRoot.querySelector( "aw-calendar-simple" );
+		const calendar = this.$.ppCalendar.calendar;
 		calendar.set_date( value );
 	}
 
@@ -530,6 +600,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		
 		if( this.value ) {
 			this.valueInit = this.value;
+			this.$.ppCalendar.calendar.set_date(this.value);
 		}
 
 		//  Ponemos el formato de fecha por defecto
@@ -538,6 +609,22 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		if( this.time && this.formatdate == "numeric" ) {
 			this.formatdate = "numericHour";
 		}
+	}
+
+	/**
+	 * @method	_isValidDate
+	 * 
+	 * Valida si una fecha es valida
+	 * 
+	 * @param {string} d 
+	 */
+	_isValidDate(d) {
+		const date = new Date(d);
+		if( date === "Invalid Date") {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -593,7 +680,15 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			document.body.appendChild( this.$.ppCalendar );
 		}
 
-		this.open = true;
+		if(this.inputElement.value && this.inputElement.value !== this.$.ppCalendar.calendar.get_date()?.string) {
+			if( this.inputElement.value !== this.$.ppCalendar.calendar.get_date()?.string ) {
+				this.$.ppCalendar.calendar.set_date(this.inputElement.value);
+			}			
+		} else if(!this.inputElement.value) {
+			this.$.ppCalendar.calendar.reset();
+		}
+
+		this._open = true;
 	}
 
 	/**
@@ -622,20 +717,6 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		} else {
 			this.valueInit = "";
 		}
-	}
-	
-	/**
-	 * @method	_clear
-	 * 
-	 * Limpia la fecha del input.
-	 */
-	_clear() {
-		this.inputElement.value = "";
-		this.inputVisible.value ="";
-
-		this.$.clear.style.display = "none";
-			
-		this._change();
 	}
 
 	/**
