@@ -109,7 +109,7 @@ class AwInputPopupCalendar extends PolymerElement {
 
     static get properties() {
         return {
-            open: {type: Boolean, value: false, observer: "_handleOpen", notify: true, reflectToAttribute: true },
+            open: {type: Boolean, value: false, observer: "_handleOpen", notify: true },
 			lang: { type: String, value: "es" },
 			titcalendar: { type: String, value: "Selecciona una fecha" },
 			time: { type: Boolean, value: false },
@@ -135,6 +135,14 @@ class AwInputPopupCalendar extends PolymerElement {
         this.isOpen = false;
 
         this.namecalendar = this.getAttribute("namecalendar");
+
+        this.functions = {
+            docKeyUp: (ev) => {
+                this._handleDocKeyUp(ev);
+            }
+        };
+
+        
     }
 
     /**
@@ -144,6 +152,7 @@ class AwInputPopupCalendar extends PolymerElement {
         super.connectedCallback();
 
         this.calendar = this.$.calendar;
+
         
         //Resolvemos el componente
         
@@ -155,6 +164,7 @@ class AwInputPopupCalendar extends PolymerElement {
      */
     disconectedCallback() {
         super.disconectedCallback();
+
     }
 
     /**
@@ -177,6 +187,8 @@ class AwInputPopupCalendar extends PolymerElement {
 
         this.isOpen = false;
         this.open = false;
+
+        document.removeEventListener("keyup", this.functions.docKeyUp);
     }
 
     /**
@@ -198,6 +210,27 @@ class AwInputPopupCalendar extends PolymerElement {
         });
 
         this.isOpen = true;
+
+        document.addEventListener("keyup", this.functions.docKeyUp);
+    }
+
+    /**
+     * @method  _handleDocKeyup
+     * 
+     * Escucha el evento de pulsación en el documento
+     * 
+     * @param {KeyboardEvent} ev 
+     */
+    _handleDocKeyUp(ev) {
+        if( ev.key === "Enter" && ev.path[3].getAttribute && ev.path[3].getAttribute("id") === "selectable_hour" ) {
+            setTimeout(() => {
+                const date = this.$.calendar.get_date();
+                if( date) {
+                    this.closeCalenadr();
+                }
+            });
+            
+        }
     }
 
     /**

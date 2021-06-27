@@ -102,6 +102,7 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 					background-color: var(--aw-input-background-color-disabled,#F9F9F9);
 				}
 				.container input#nameArchivo:-webkit-autofill {
+					box-shadow: 0 0 0px 1000px white inset !important;
 					-webkit-box-shadow: 0 0 0px 1000px white inset !important;
 					-webkit-text-fill-color: var(--aw-input-color, #111111);
 				}
@@ -300,6 +301,15 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 		}
 	}
 
+	constructor() {
+		super();
+
+		/** @type {HTMLInputElement} */
+		this.inputElement = null;
+		/** @type {HTMLInputElement} */
+		this.inputVisible = null;
+	}
+
 	/**
 	 * @method	connectedCallback
 	 * 
@@ -347,17 +357,40 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 	}
 
 	/**
+	 * @method	clear
+	 * 
+	 * Limpia el input
+	 */
+	clear() {
+		this.inputVisible.value = "";
+		this.inputElement.setAttribute("type", "");
+		this.inputElement.setAttribute("type", "file");
+	}
+
+	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
 	error_hide()
 	{
-		this.inputElement.setAttribute( "errmsg", "" );
+		this.errorHide();
 	}
 
 	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide()
+	 {
+		 this.inputElement.setAttribute( "errmsg", "" );
+	}
+ 
+	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -365,21 +398,45 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 	 */
 	error_show( message )
 	{
+		this.errorShow(message);
+	}
+ 
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message )
+	{
 		this.inputElement.setAttribute( "errmsg", message );
 	}
 
 	/**
 	 * @method	get_files
+	 * @deprecated
 	 * 
 	 * Obtiene los archivos cargados en el input
 	 */
 	get_files()
+	{
+		return this.getFiles();
+	}
+
+	/**
+	 * @method	getFiles
+	 * 
+	 * Obtiene los archivos cargados en el input
+	 */
+	getFiles()
 	{
 		return this.inputElement.files;
 	}
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -387,17 +444,42 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 	 */
 	get_value()
 	{
+		return this.getValue();
+	}
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue()
+	{
 		return this.inputElement.value;
 	}
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error()
+	{
+		return this.hasError();
+	}
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError()
 	{
 		if( this.inputElement.getAttribute( "errmsg" )) {
 			return true;

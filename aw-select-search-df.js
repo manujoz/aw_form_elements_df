@@ -431,17 +431,41 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	}
 
 	/**
+	 * @method	clear
+	 * 
+	 * Resetea el componente a su valor por defecto
+	 */
+	clear() {
+		if(this.selectedindex === 0) {
+			this.set("selectedindex", 999999999);
+		}
+		this.set("selectedindex", 0);
+	}
+
+	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
 	error_hide()
+	{
+		this.errorHide();
+	}
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide()
 	{
 		this.inputElement.setAttribute( "errmsg", "" );
 	}
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -449,11 +473,24 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	 */
 	error_show( message )
 	{
+		this.errorShow(message);
+	}
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message )
+	{
 		this.inputElement.setAttribute( "errmsg", message );
 	}
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -461,17 +498,42 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	 */
 	get_value()
 	{
+		return this.getValue();
+	}
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue()
+	{
 		return this.inputElement.value;
 	}
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error()
+	{
+		return this.hasError();
+	}
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError()
 	{
 		if( this.inputElement.getAttribute( "errmsg" )) {
 			return true;
@@ -492,6 +554,57 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		this.$.label.removeAttribute( "writted" );
 
 		this._create();
+	}
+
+	/**
+	 * @method	toIndex
+	 * 
+	 * Selecciona una opción del selec por su índice
+	 * 
+	 * @param	{number} index 	Índice de la opción que queremos seleccionar
+	 * @param	{number} notify	Indica si se debe notificar el cambio enviando el evento
+	 */
+	toIndex(index, notify = false)
+	{
+		for( let i = 0; i < this.options.length; i++ ) {
+			if(this.options[i].selected && i === index) {
+				return;
+			}
+		}
+
+		if(this.selectedindex === index) {
+			this.set("selectedindex", 9999999);
+		}
+
+		this.set("selectedindex", index);
+
+		if(notify) {
+			this._change();
+		}
+	}
+
+	/**
+	 * @method	toValue
+	 * 
+	 * Selecciona una opción del select por su valor
+	 * 
+	 * @param	{number} value 	Valor de la opción que queremos selecionar
+	 * @param	{number} notify	Indica si se debe notificar el cambio enviando el evento
+	 */
+	toValue(value, notify = false) {
+		if(this.inputElement.value === value) {
+			false;
+		}
+
+		if(this.selectedvalue === value) {
+			this.set("selectedvalue", "oa-asd3-ad-v-daq2eqw-");
+		}
+
+		this.set("selectedvalue", value);
+
+		if(notify) {
+			this._change();
+		}
 	}
 
 	/**
@@ -730,7 +843,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 	 * @param	{object}		ev			Evento devuelto en el listener
 	 * @param	{object}		el			Elemento sobre el que interactua el evento
 	 */
-	_select_option( ev, el ) {
+	_select_option(ev, el, notify = true) {
 		this.writtedopen = "";
 
 		this.inputSearch.value = "";
@@ -797,8 +910,9 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		}, 50);
 
 		// lanzamos el cambio
-
-		this._change();
+		if(notify) {
+			this._change();
+		}
 	}
 
 	/**
@@ -1047,7 +1161,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		for( var i = 0; i < this.options_obj.length; i++ ) {
 			if( i === this.selectedindex ) {
 				this.options_obj[ i ].selected = true;
-				this._select_option( "", this.options_obj[ i ].el );
+				this._select_option("", this.options_obj[ i ].el, false);
 				return false;
 			}
 		}
@@ -1068,7 +1182,7 @@ class AwSelectSearchDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExtern
 		for( var i = 0; i < this.options_obj.length; i++ ) {
 			if( this.options_obj[ i ].value === this.selectedvalue ) {
 				this.options_obj[ i ].selected = true;
-				this._select_option( "", this.options_obj[ i ].el );
+				this._select_option("", this.options_obj[ i ].el, false);
 				return false;
 			}
 		}
