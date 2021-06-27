@@ -434,7 +434,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 */
 	clear() {
 		this.inputElement.value = "";
-		this.inputVisible.value ="";
+		this.inputVisible.value = "";
 
 		this.$.clear.style.display = "none";
 			
