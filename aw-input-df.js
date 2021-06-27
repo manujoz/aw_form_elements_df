@@ -434,7 +434,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	 * Resetea el componente
 	 */
 	clear(){
-		this.inputElement = "";
+		this.inputElement.value = "";
 	}
 
 	/**
