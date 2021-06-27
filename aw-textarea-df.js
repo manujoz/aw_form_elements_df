@@ -113,6 +113,7 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 					background-color: #999999;
 				}
 				.container textarea:-webkit-autofill {
+					box-shadow: 0 0 0px 1000px white inset !important;
 					-webkit-box-shadow: 0 0 0px 1000px white inset !important;
 					-webkit-text-fill-color: var(--aw-input-color, #111111);
 				}
@@ -243,6 +244,13 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 
 	}
 
+	constructor() {
+		super();
+
+		/** @type {HTMLTextAreaElement} */
+		this.inputElement = null;
+	}
+
 	/**
 	 * @method	connectedCallback
 	 * 
@@ -302,17 +310,39 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 	}
 
 	/**
+	 * @method	clear
+	 * 
+	 * Limpia el textarea
+	 */
+	clear() {
+		this.inputElement.value = "";
+		this.inputElement.dispatchEvent(new KeyboardEvent('keyup',{'key':'Crtl'}));
+	}
+
+	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
 	error_hide()
+	{
+		this.errorHide();
+	}
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide()
 	{
 		this.inputElement.setAttribute( "errmsg", "" );
 	}
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -320,11 +350,24 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 	 */
 	error_show( message )
 	{
+		this.errorShow(message);
+	}
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message )
+	{
 		this.inputElement.setAttribute( "errmsg", message );
 	}
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -332,17 +375,42 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 	 */
 	get_value()
 	{
+		return this.getValue();
+	}
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue()
+	{
 		return this.inputElement.value;
 	}
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
 	has_error()
+	{
+		return this.hasError();
+	}
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError()
 	{
 		if( this.inputElement.getAttribute( "errmsg" )) {
 			return true;

@@ -12,6 +12,7 @@ class AwSelectOptions extends PolymerElement {
 				font-family: var(--aw-input-font-family);
                 display: none;
                 position: absolute;
+                z-index: 1;
             }
 			#search {
 				position: relative;

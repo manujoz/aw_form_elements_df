@@ -291,10 +291,6 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 
 	static get properties() {
 		return {
-			// Atributos del componente
-
-			inputElement: { type: Object },
-
 			// Atributos básicos del input
 
 			id: { type: String },
@@ -355,6 +351,13 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 			parentForm: { type: Object },
 			noregister: { type: Boolean, value: false }
 		};
+	}
+
+	constructor() {
+		super();
+
+		/** @type {HTMLInputElement} */
+		this.inputElement = undefined;
 	}
 
 	/**
@@ -426,48 +429,53 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	}
 
 	/**
-	 * @method error_hide
+	 * @method	clear
+	 * 
+	 * Resetea el componente
+	 */
+	clear(){
+		this.inputElement = "";
+	}
+
+	/**
+	 * @method errorHide
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
-	error_hide()
-	{
+	errorHide() {
 		this.inputElement.setAttribute( "errmsg", "" );
 	}
 
 	/**
-	 * @method error_show
+	 * @method errorShow
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
 	 * @param {string} message Mensaje de error que se va a mostrar
 	 */
-	error_show( message )
-	{
+	errorShow(message) {
 		this.inputElement.setAttribute( "errmsg", message );
 	}
 
 	/**
-	 * @method get_value
+	 * @method getValue
 	 * 
 	 * Obtiene el valor del input
 	 * 
 	 * @return {string}
 	 */
-	get_value()
-	{
+	getValue() {
 		return this.inputElement.value;
 	}
 
 	/**
-	 * @method	has_error
+	 * @method	hasError
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
 	 * @return {boolean}
 	 */
-	has_error()
-	{
+	hasError() {
 		if( this.inputElement.getAttribute( "errmsg" )) {
 			return true;
 		} else {
@@ -483,6 +491,17 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	focus() {
 		this.inputElement.focus();
 		this.inputElement.selectionStart = this.inputElement.selectionEnd = this.inputElement.value.length;
+	}
+
+	/**
+	 * @method	set_value
+	 * 
+	 * Asigna el valor al elemento
+	 * 
+	 * @param {string|number} value 
+	 */
+	setValue(value) {
+		this.inputElement.value = value;
 	}
 
 	/**
@@ -734,6 +753,62 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 		} else {
 			this.$.label.removeAttribute( "readonly" );
 		}
+	}
+
+
+
+
+
+	
+
+	/**
+	 * @method error_show
+	 * @deprecated
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	error_show( message )
+	{
+		this.errorShow(message);
+	}
+
+	/**
+	 * @method error_hide
+	 * @deprecated
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	error_hide()
+	{
+		this.errorHide();
+	}
+
+	/**
+	 * @method	has_error
+	 * @deprecated
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	has_error()
+	{
+		return this.hasError();
+	}
+
+	/**
+	 * @method get_value
+	 * @deprecated
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	get_value()
+	{
+		return this.getValue();
 	}
 }
 

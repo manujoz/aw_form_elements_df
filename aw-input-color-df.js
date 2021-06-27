@@ -187,6 +187,15 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 		};
 	}
 
+	constructor() {
+		super();
+
+		/** @type {HTMLInputElement} */
+		this.inputElement = null;
+		/** @type {HTMLInputElement} */
+		this.inputColor = null;
+	}
+
 	/**
 	 * @method	connectedCallback
 	 * 
@@ -242,6 +251,7 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 
 	/**
 	 * @method error_hide
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 */
@@ -252,6 +262,7 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 
 	/**
 	 * @method error_show
+	 * @deprecated
 	 * 
 	 * Muestra u oculta un mensaje de error
 	 * 
@@ -264,6 +275,7 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 
 	/**
 	 * @method get_value
+	 * @deprecated
 	 * 
 	 * Obtiene el valor del input
 	 * 
@@ -276,6 +288,7 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 
 	/**
 	 * @method	has_error
+	 * @deprecated
 	 * 
 	 * Devuelve si el campo tiene un error
 	 * 
@@ -291,13 +304,72 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 	}
 
 	/**
+	 * @method	clear
+	 * 
+	 * Resetea el input a su valor inicial
+	 */
+	clear() {
+		this.set("value", "#EAEAEA");
+	}
+
+	/**
+	 * @method errorHide
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 */
+	errorHide()
+	{
+		this.inputElement.setAttribute( "errmsg", "" );
+	}
+
+	/**
+	 * @method errorShow
+	 * 
+	 * Muestra u oculta un mensaje de error
+	 * 
+	 * @param {string} message Mensaje de error que se va a mostrar
+	 */
+	errorShow( message )
+	{
+		this.inputElement.setAttribute( "errmsg", message );
+	}
+
+	/**
+	 * @method getValue
+	 * 
+	 * Obtiene el valor del input
+	 * 
+	 * @return {string}
+	 */
+	getValue()
+	{
+		return this.inputElement.value;
+	}
+
+	/**
+	 * @method	hasError
+	 * 
+	 * Devuelve si el campo tiene un error
+	 * 
+	 * @return {boolean}
+	 */
+	hasError()
+	{
+		if( this.inputElement.getAttribute( "errmsg" )) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * @method	_change
 	 * 
 	 * Acciones a realizar cuando el valor cambia
 	 * 
 	 * @param {any} ev Evento lanzado por le input
 	 */
-	_change( ev )
+	_change(ev)
 	{
 		this.shadowRoot.querySelector( ".container" ).style.backgroundColor = this.inputColor.value;
 		this.inputElement.value = this.inputColor.value;
@@ -396,7 +468,7 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 	 */
 	_init()
 	{
-		if( !this.value ) {
+		if(!this.value) {
 			this.value = "#EAEAEA";
 		}
 
@@ -422,11 +494,17 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 		this.dispatchEvent(new CustomEvent('aw-form-element-register', { detail: this, bubbles: true, composed: true }));
 	}
 
+	/**
+	 * @method	_set_disabled
+	 */
 	_set_disabled()
 	{
 		// TODO: Hacer este método
 	}
 
+	/**
+	 * @method	_set_readonly
+	 */
 	_set_readonly()
 	{
 		// TODO: Hacer este método
