@@ -298,7 +298,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			id: { type: String },
 			name: { type: String },
 			placeholder: { type: String },
-			value: { type: String },
+			value: { type: String, observer: "_handleValue" },
 			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
             disabled: {type: Boolean, value: false, observer: "_set_disabled"},
 			autocapitalize: { type: String },
@@ -335,6 +335,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		/** @type {HTMLInputElement} */
 		this.inputVisible = undefined;
 
+		this.value = undefined;
 		this.valueInit = "";
 
 		// Funciones de escucha
@@ -580,6 +581,17 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 		/** @type {AwCalendarSimple} */
 		const calendar = this.$.ppCalendar.calendar;
 		calendar.set_date( value );
+	}
+
+	/**
+	 * @method _handleValue
+	 */
+	_handleValue() {
+		this.$.ppCalendar.calendar.set_date(this.value);
+
+		const date = this.$.ppCalendar.calendar.get_date().format.numericHour;
+		this.valueInit = date.string;
+		this.inputVisible.value = date[this.formatdate];
 	}
 
 	/**
