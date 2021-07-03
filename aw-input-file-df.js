@@ -5,6 +5,16 @@ import { AwExternsFunctionsMixin } 		from "../aw_extern_functions/aw-extern-func
 
 import "../aw_polymer_3/iron-icons/image-icons.js";
 
+/**
+ * Componete de input-file
+ * 
+ * @attr {Boolean} error
+ * @attr {String} errmsg
+ * @attr {Boolean} noerrors
+ * @attr {String} connectedfunc
+ * @attr {String} changefunc
+ * @attr {String} clickfunc
+ */
 class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFunctionsMixin( PolymerElement ))) {
 	static get template() {
 		return html`
@@ -77,6 +87,14 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 					-ms-box-sizing: border-box;
 					box-sizing: border-box;
 					transition: all .2s;
+				}
+				.container input#nameArchivo[size="small"] {
+					padding: 5px;
+					font-size: 12px;
+				}
+				.container input#nameArchivo[size="big"] {
+					padding: 11px 9px 10px;
+					font-size: 18px;
 				}
 				.container input#nameArchivo:focus {
 					outline: 0;
@@ -155,10 +173,13 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 					color: var(--aw-button-color, #FFFFFF) !important;
 					background-color: var(--aw-button-bg-color, #1C7CDD) !important;
 					transition: color .2s, background .2s, border .2s;
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
-					-ms-box-sizing: border-box;
 					box-sizing: border-box;
+				}
+				.container > button[size="small"] {
+					font-size: 12px !important;
+				}
+				.container > button[size="big"] {
+					font-size: 18px !important;
 				}
 				
 				:host(:hover) .container > button {
@@ -242,8 +263,8 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
 				<div class="icon start"><iron-icon icon="image:camera-alt"></iron-icon></div>
-				<input type="text" id="nameArchivo" on-focus="_focusin" readonly disabled$="[[disabled]]" />
-				<button>Selecciona</button>
+				<input type="text" id="nameArchivo" size$="[[size]]" on-focus="_focusin" readonly disabled$="[[disabled]]" />
+				<button size$="[[size]]">Selecciona</button>
 				<div id="cont_input">
 					<label><input
 						type="file"
@@ -267,47 +288,75 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 
 	static get properties() {
 		return {
-			// Elemento del input
-
-			inputVisible: { type: Object, value: null },
-			inputElement: { type: Object, value: null },
-			buttonFile: { type: Object, value: null },
-
 			// Atributos básicos del input
+			// ..........................
 
+			/** ID del componente */
 			id: { type: String },
+			/** Nombre del componente */
 			name: { type: String },
-			value: { type: String },
-			multiple: { type: Boolean, value: false },
-			disabled: {type: Boolean, value: false, observer: "_set_disabled"},
-			autofocus: { type: Boolean, value: false },
-
-			// Atributos de validación
-
-			required: { type: Boolean, value: false },
-			allowed: { type: Array },
-			novalidate: { type: Boolean, value: false },
-			validateonchange: { type: Boolean, value: false },
+			/** Si admite múltiples archivos */
+			multiple: { type: Boolean },
+			/** Desactiva el componente */
+			disabled: {type: Boolean, observer: "_set_disabled"},
+			/** Focus sobre el componente al cargar */
+			autofocus: { type: Boolean },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
 
 			// Especiales del aw-input
+			// ..........................
 
-			label: { type: String, value: "" },
-			icon: { type: Boolean, value: false },
+			/** Label del componente */
+			label: { type: String },
+			/** Pone el icono en el componente */
+			icon: { type: Boolean },
 
-			// Relación con el aw-form y el form
+			// Relación con el aw-form
+			// ..........................
 
-			parentForm: Object,
-			noregister: { type: Boolean, value: false }	
+			/** No registra el componente en el formulario */
+			noregister: { type: Boolean },
+
+			// Atributos de validación
+			// ..........................
+
+			/** Indica que este campo es obligatorio */
+			required: { type: Boolean },
+			/** Archivos permitidos en el componente */
+			allowed: { type: Array },
+			/** Indica que el campo no debe ser validado */
+			novalidate: { type: Boolean },
+			/** Indica que el campo debe ser validado al cambiar */
+			validateonchange: { type: Boolean },
 		}
 	}
 
 	constructor() {
 		super();
 
+		this.id = undefined;
+		this.name = undefined;
+		this.value = undefined;
+		this.multiple = false;
+		this.disabled = false;
+		this.autofocus = false;
+		this.label = undefined;
+		this.icon = false;
+		this.noregister = false;
+		this.size = undefined;
+
 		/** @type {HTMLInputElement} */
 		this.inputElement = null;
 		/** @type {HTMLInputElement} */
 		this.inputVisible = null;
+		/** @type {HTMLButtonElement} */
+		this.buttonFile = null;
+		/** @type {AwForm} */
+		this.parentForm = undefined;
 	}
 
 	/**
@@ -335,6 +384,12 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 		// Registramos en el formulario.
 
 		this._register_in_form();
+
+		// Invocamos la función externa connected
+
+		if ( typeof this.connectedfunc === "function" ) {
+			this.connectedfunc( this );
+		}
 
 		// Resolvemos
 
@@ -561,8 +616,7 @@ class AwInputFileDf extends AwInputErrorMixin( AwFormValidateMixin( AwExternsFun
 		// Si hay error detenemos
 		
 		if( this.inputElement.getAttribute( "errmsg" )) {
-			this.inputVisible.value = "";
-			this.inputElement.value = "";
+			this.clear();
 			return false;
 		}
 

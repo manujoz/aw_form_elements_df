@@ -1,6 +1,6 @@
 import { PolymerElement, html, Polymer } from "../../aw_polymer_3/polymer/polymer-element.js";
-import "./aw-select-option.js"
-import "../../aw_polymer_3/iron-icons/iron-icons.js"
+import "../../aw_polymer_3/iron-icons/iron-icons.js";
+import "./aw-select-option.js";
 
 class AwSelectOptions extends PolymerElement {
     static get template() {
@@ -59,6 +59,24 @@ class AwSelectOptions extends PolymerElement {
 			#options::-webkit-scrollbar-thumb:hover {
 				background-color: #999999;
 			}
+            :host([size="small"]) #search input {
+                font-size: 12px;
+                padding: 5px 22px 5px 5px;
+            }
+            :host([size="small"]) #search iron-icon {
+				width: 16px;
+				height: 16px;
+                top: 5px;
+            }
+            :host([size="big"]) #search input{
+                font-size: 18px;
+                padding: 11px 25px 10px 9px;
+            }
+            :host([size="big"]) #search iron-icon {
+				width: 22px;
+				height: 22px;
+                top: 10px;
+            }
         </style>
         <template is="dom-if" if="[[searchable]]">
             <div id="search">
@@ -68,7 +86,7 @@ class AwSelectOptions extends PolymerElement {
         </template>
         <div id="options">
             <template is="dom-repeat" items="{{options}}" as="option" filter="{{_filter(stringSearch)}}">
-                <aw-select-option option="{{option}}" on-click="_optionSelected" on-mouseenter="_optionMouseEnter"></aw-select-option>
+                <aw-select-option size="[[size]]" option="{{option}}" on-click="_optionSelected" on-mouseenter="_optionMouseEnter"></aw-select-option>
             </template>
         </div>
         `;
@@ -79,6 +97,11 @@ class AwSelectOptions extends PolymerElement {
             options: { type: Array, observer: "_handleOptions" },
             open: { type: Boolean, notify: true, observer: "_handleOpen" },
             searchable: { type: Boolean },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
         }
     }
 
@@ -88,9 +111,11 @@ class AwSelectOptions extends PolymerElement {
     constructor() {
         super();
 
+        /** @type {Array} */
         this.options = [];
         this.open = false;
         this.searchable = false;
+        this.size = undefined;
 
         this.height = 0;
         this.width = 0;

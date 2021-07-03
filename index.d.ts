@@ -1,5 +1,12 @@
 interface AwInput extends HTMLElement {
 	inputElement: HTMLInputElement;
+	connectedfunc: Function;
+	changefunc: Function;
+	focusinfunc: Function;
+	focusoutfunc: Function;
+	keypressfunc: Function;
+	keyupfunc: Function;
+	validator: AwFormValidator;
 
 	/**
 	 * @method	clear
@@ -66,6 +73,9 @@ interface AwSelect extends HTMLElement {
 	inputElement: HTMLInputElement;
 	selectedindex: number;
 	selectedvalue: string;
+	validator: AwFormValidator;
+	connectedfunc: Function;
+	changefunc: Function;
 
 	/**
 	 * @method error_hide
@@ -181,6 +191,11 @@ declare var AwSelect: {
 
 interface AwInputColor extends HTMLElement {
 	inputElement: HTMLInputElement;
+	connectedfunc: Function;
+	changefunc: Function;
+	focusinfunc: Function;
+	focusoutfunc: Function;
+	validator: AwFormValidator;
 
 	/**
 	 * @method error_hide
@@ -267,10 +282,14 @@ declare var AwInputColor: {
 	new(): AwInputColor
 }
 
+/**
+ * @deprecated
+ */
 interface AwSelectSearch extends HTMLElement {
 	inputElement: HTMLInputElement;
 	selectedindex: number;
 	selectedvalue: string;
+	validator: AwFormValidator;
 
 	/**
 	 * @method error_hide
@@ -386,6 +405,11 @@ declare var AwSelectSearch: {
 
 interface AwInputDate extends HTMLElement {
 	inputElement: HTMLInputElement;
+	connectedfunc: Function;
+	changefunc: Function;
+	focusinfunc: Function;
+	focusoutfunc: Function;
+	validator: AwFormValidator;
 
 	/**
 	 * @method clear
@@ -500,6 +524,10 @@ declare var AwInputDate: {
 
 interface AwInputFile extends HTMLElement {
 	inputElement: HTMLInputElement;
+	connectedfunc: Function;
+	changefunc: Function;
+	clickfunc: Function;
+	validator: AwFormValidator;
 
 	/**
 	 * @method error_hide
@@ -610,6 +638,13 @@ declare var AwInputFile: {
 
 interface AwTextArea extends HTMLElement {
 	inputElement: HTMLInputElement;
+	connectedfunc: Function;
+	changefunc: Function;
+	focusinfunc: Function;
+	focusoutfunc: Function;
+	keypressfunc: Function;
+	keyupfunc: Function;
+	validator: AwFormValidator;
 
 	/**
 	 * @method error_hide
@@ -703,19 +738,11 @@ declare var AwTextArea: {
 	new(): AwTextArea
 }
 
-interface HTMLElementTagNameMap {
-	"aw-input": AwInput;
-	"aw-input-df": AwInput;
-	"aw-select": AwSelect;
-	"aw-select-df": AwSelect;
-	"aw-select-search": AwSelectSearch;
-	"aw-select-search-df": AwSelectSearch;
-	"aw-input-color": AwInputColor;
-	"aw-input-color-df": AwInputColor;
-	"aw-input-date": AwInputDate;
-	"aw-input-date-df": AwInputDate;
-	"aw-input-file": AwInputFile;
-	"aw-input-file-df": AwInputFile;
-	"aw-textarea": AwTextArea;
-	"aw-textarea-df": AwTextArea;
+interface ComunidadesAutonomas {
+	ccaa: "andalucia"|"andalucía"|"aragon"|"aragón"|"asturias"|"baleares"|"canarias"|"cantabria"|"castilla"|"cataluña"|"ceuta"|"extremadura"|"galicia"|"madrid"|"mancha"|"melilla"|"murcia"|"navarra"|"rioja"|"valencia"|"vascongadas"
+}
+
+declare var ComunidadesAutonomas: {
+	prototype: ComunidadesAutonomas,
+	new(): ComunidadesAutonomas
 }
