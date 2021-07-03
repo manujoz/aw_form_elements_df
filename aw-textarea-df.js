@@ -4,6 +4,20 @@ import { AwInputCharCounterMixin } 			from "../aw_form_mixins/aw-char-counter-mi
 import { AwFormValidateMixin } 				from "../aw_form_mixins/aw-form-validate-mixin.js";
 import { AwExternsFunctionsMixin } 			from "../aw_extern_functions/aw-extern-functions-mixin.js";
 
+/**
+ * Componente de textarea
+ * 
+ * @attr {Boolean} countchar - Activa el contador de caracteres
+ * @attr {Boolean} error
+ * @attr {String} errmsg
+ * @attr {Boolean} noerrors
+ * @attr {String} connectedfunc
+ * @attr {String} changefunc
+ * @attr {String} focusinfunc
+ * @attr {String} focusoutfunc
+ * @attr {String} keypressfunc
+ * @attr {String} keyupfunc
+ */
 class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormValidateMixin ( AwExternsFunctionsMixin ( PolymerElement )))) {
 	static get template() {
 		return html`
@@ -77,6 +91,14 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 					transition: all .2s;
 					resize: none;
 					vertical-align: top;
+				}
+				.container textarea[size="small"] {
+					padding: 5px;
+					font-size: 12px;
+				}
+				.container textarea[size="big"] {
+					padding: 11px 9px 10px;
+					font-size: 18px;
 				}
 				.container textarea:focus{
                 	outline: 0;
@@ -180,6 +202,8 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 					nospaces$="[[nospaces]]"
 					novalidate$=[[novalidate]]
 
+					size$="[[size]]"
+
 					errmsg$="{{errmsg}}"
 					on-focusin="_focusin"
 					on-focusout="_focusout"
@@ -201,45 +225,76 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 
 	static get properties() {
 		return {
-			// Elemento del input
-
-			inputElement: { type: Object, value: null },
-
 			// Atributos básicos del input
+			// ...........................
 
+			/** ID del componente */
 			id: { type: String },
+			/** Nombre del componente */
 			name: { type: String },
-			rows: { type: String, value: "1" },
+			/** Filas que tendrá el textarea */
+			rows: { type: String },
+			/** Placeholder del componente */
 			placeholder: { type: String },
-			autocomplete: { type: String, value: "off" },
+			/**
+			 * Autocapitaliza el valor del input
+			 * @type {"off"|"none"|"on"|"sentences"|"words"|"characters"}
+			 */
+			autocomplete: { type: String },
+			/** Longitud mínima del texto */
 			minlength: { type: Number },
+			/** Longitud máxima del texto */
 			maxlength: { type: Number },
-			value: { type: String, value: "" },
-			autocorrect: String,
-			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
-			disabled: {type: Boolean, value: false, observer: "_set_disabled"},
-
-			// Atributos de validación
-
-			required: { type: Boolean, value: false },
-			nospaces: { type: String },
-			novalidate: { type: Boolean, value: false },
-			validateonchange: { type: Boolean, value: false },
+			/** Valor del componente */
+			value: { type: String },
+			/**
+			 * Activa la corrección gramatical del input
+			 * @type {"on"|"off"}
+			 */
+			autocorrect: { type: String },
+			/** El componente es de solo lectura */
+			readonly: {type: Boolean, observer: "_set_readonly"},
+			/** El componente está desactivado */
+			disabled: {type: Boolean, observer: "_set_disabled"},
 
 			// Atributos de diseño
+			// .......................
 
-			label: { type: String, value: "" },
-			autofocus: { type: Boolean, value: false },
+			/** Etiqueta del componente */
+			label: { type: String },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
+			/** Hace focus en el componente al cargar */
+			autofocus: { type: Boolean },
 
 			// Especiales del aw-textarea
+			// .......................
 
-			noadjust: { type: Boolean, value: false },
-			maxheight: { type: Number, value: 0 },
+			/** El textarea no se ajusta en altura */
+			noadjust: { type: Boolean },
+			/** Altura máxima del textarea */
+			maxheight: { type: Number },
 
-			// Relación con el aw-form y el form
+			// Relación con el aw-form
+			// .......................
 
-			parentForm: Object,
-			noregister: { type: Boolean, value: false }
+			/** El textarea no se registra en el formulario */
+			noregister: { type: Boolean },
+
+			// Atributos de validación
+			// .......................
+
+			/** Indica que este campo es obligatorio */
+			required: { type: Boolean },
+			/** No permite espacios en el valor */
+			nospaces: { type: String },
+			/** Indica que el campo no debe ser validado */
+			novalidate: { type: Boolean },
+			/** Indica que el campo debe ser validado al cambiar */
+			validateonchange: { type: Boolean },	
 		};
 
 	}
@@ -247,8 +302,28 @@ class AwTextareaDf extends AwInputErrorMixin( AwInputCharCounterMixin ( AwFormVa
 	constructor() {
 		super();
 
+		this.autocomplete = "off";
+		this.autocorrect = undefined;
+		this.autofocus = false;
+		this.disabled = false;
+		this.id = undefined;
+		this.label = undefined;
+		this.maxheight = 0;
+		this.maxlength = undefined;
+		this.minlength = undefined;
+		this.name = undefined;
+		this.noadjust = false;
+		this.noregister = false;
+		this.placeholder = undefined;
+		this.readonly = false;
+		this.rows = "1";
+		this.size = undefined;
+		this.value = "";
+
 		/** @type {HTMLTextAreaElement} */
 		this.inputElement = null;
+		/** @type {AwForm} */
+		this.parentForm = undefined;
 	}
 
 	/**

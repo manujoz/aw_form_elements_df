@@ -5,6 +5,19 @@ import { AwExternsFunctionsMixin } 		from "../aw_extern_functions/aw-extern-func
 
 import "../aw_form_helpers/aw-input-error.js";
 
+/**
+ * Componete input-color
+ * 
+ * @attr {Boolean} error
+ * @attr {String} errmsg
+ * @attr {Boolean} noerrors
+ * @attr {String} connectedfunc
+ * @attr {String} changefunc
+ * @attr {String} focusinfunc
+ * @attr {String} focusoutfunc
+ * @cssprop --aw-primary-color
+ * @cssprop --aw-error-color
+ */
 class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement ))) 
 {
 	static get template() {
@@ -95,12 +108,17 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 					font-weight: var(--aw-input-font-weight,normal);
 					font-style: var(--aw-input-font-style,normal);
 					text-align: var(--aw-input-text-align, left);
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
-					-ms-box-sizing: border-box;
 					box-sizing: border-box;
 					transition: all .2s;
 					opacity: 0;
+				}
+				.container input[size="small"] {
+					padding: 5px;
+					font-size: 12px;
+				}
+				.container input[size="big"] {
+					padding: 11px 9px 10px;
+					font-size: 18px;
 				}
 				.container input[type=color] {
 					position: absolute;
@@ -142,6 +160,8 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 					required$="[[required]]"
 					novalidate$=[[novalidate]]
 
+					size$=[[size]]
+
 					error$=[[error]]
 					errmsg$="{{errmsg}}"
 					/></label>
@@ -152,48 +172,92 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 					<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
 				</div>
 			</div>
-			<slot name="datalist"></slot>
 		`;
 	}
 
 	static get properties() {
 		return {
-			// Atributos del componente
-
-			inputElement: { type: Object },
-
 			// Atributos básicos del input
+			// ..........................
 
+			/**
+			 * Id del componente
+			 */
 			id: { type: String },
+			/**
+			 * Nombre del componente
+			 */
 			name: { type: String },
+			/**
+			 * Valor del componente
+			 */
 			value: { type: String, observer: "_change_value" },
-			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
-            disabled: {type: Boolean, value: false, observer: "_set_disabled"},
+			/**
+			 * El componete es de solo lectura
+			 */
+			readonly: {type: Boolean, observer: "_set_readonly"},
+			/**
+			 * El compoente está desactivado
+			 */
+            disabled: {type: Boolean, observer: "_set_disabled"},
 
 			// Atributos de diseño
+			// ..........................
 
+			/**
+			 * Etiqueta del componente
+			 */
 			label: { type: String },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
+
+			// Relación con el aw-form
+			// ..........................
+
+			/**
+			 * El componente no es registrado en el formulario
+			 */
+			noregister: { type: Boolean },
 
 			// Atrtibutos de validación
+			// ..........................
 
-			required: { type: Boolean, value: false },
-			novalidate: { type: Boolean, value: false },
-			validateonchange: { type: Boolean, value: false },
-
-			// Relación con el aw-form y el form
-
-			parentForm: { type: Object },
-			noregister: { type: Boolean, value: false }
+			/**
+			 * Indica que este campo es obligatorio
+			 */
+			required: { type: Boolean },
+			/**
+			 * Indica que el campo no debe ser validado
+			 */
+			novalidate: { type: Boolean },
+			/**
+			 * Indica que el campo debe ser validado al cambiar
+			 */
+			validateonchange: { type: Boolean },
 		};
 	}
 
 	constructor() {
 		super();
 
+		this.id = undefined;
+		this.name = undefined;
+		this.value = undefined;
+		this.readonly = false;
+		this.disabled = false;
+		this.label = undefined;
+		this.size = undefined;
+		this.noregister = false;
+
 		/** @type {HTMLInputElement} */
 		this.inputElement = null;
 		/** @type {HTMLInputElement} */
 		this.inputColor = null;
+		/** @type {AwForm} */
+		this.parentForm = undefined;
 	}
 
 	/**

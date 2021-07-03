@@ -9,6 +9,90 @@ import "../aw_form_helpers/aw-input-error.js";
 import "../aw_form_helpers/aw-char-counter.js";
 import "../aw_form_helpers/aw-input-datalist.js";
 
+/**
+ * Componente de input
+ * 
+ * @slot datalist
+ * @attr {Boolean} countchar - Activa el contador de caracteres
+ * @attr {Boolean} error
+ * @attr {String} errmsg
+ * @attr {Boolean} noerrors
+ * @attr {String} connectedfunc
+ * @attr {String} changefunc
+ * @attr {String} focusinfunc
+ * @attr {String} focusoutfunc
+ * @attr {String} keypressfunc
+ * @attr {String} keyupfunc
+ * @cssprop --aw-primary-color
+ * @cssprop --aw-error-color
+ * @cssprop --aw-input-background-color
+ * @cssprop --aw-input-background-color-disabled
+ * @cssprop --aw-input-border
+ * @cssprop --aw-input-border-bottom
+ * @cssprop --aw-input-border-bottom-error
+ * @cssprop --aw-input-border-bottom-focused
+ * @cssprop --aw-input-border-disabled
+ * @cssprop --aw-input-border-error
+ * @cssprop --aw-input-border-focused
+ * @cssprop --aw-input-border-left
+ * @cssprop --aw-input-border-left-error
+ * @cssprop --aw-input-border-left-focused
+ * @cssprop --aw-input-border-radius
+ * @cssprop --aw-input-border-right
+ * @cssprop --aw-input-border-right-error
+ * @cssprop --aw-input-border-right-focused
+ * @cssprop --aw-input-border-top
+ * @cssprop --aw-input-border-top-error
+ * @cssprop --aw-input-border-top-focused
+ * @cssprop --aw-input-box-shadow
+ * @cssprop --aw-input-color
+ * @cssprop --aw-input-color-disabled
+ * @cssprop --aw-input-datalist-arrow-background-color
+ * @cssprop --aw-input-datalist-arrow-background-color-hover
+ * @cssprop --aw-input-datalist-arrow-color
+ * @cssprop --aw-input-datalist-arrow-color-hover
+ * @cssprop --aw-input-datalist-arrow-size
+ * @cssprop --aw-input-datalist-arrow-top
+ * @cssprop --aw-input-datalist-background-color-hover
+ * @cssprop --aw-input-datalist-color-hover
+ * @cssprop --aw-input-datalist-option-font-family
+ * @cssprop --aw-input-datalist-option-font-size
+ * @cssprop --aw-input-datalist-option-padding
+ * @cssprop --aw-input-datalist-value-background-color
+ * @cssprop --aw-input-datalist-value-color
+ * @cssprop --aw-input-datalist-value-font-size
+ * @cssprop --aw-input-font-family
+ * @cssprop --aw-input-font-size
+ * @cssprop --aw-input-font-style
+ * @cssprop --aw-input-font-weight
+ * @cssprop --aw-input-label-color
+ * @cssprop --aw-input-label-color-disabled
+ * @cssprop --aw-input-label-color-error
+ * @cssprop --aw-input-label-color-focused
+ * @cssprop --aw-input-label-color-writted
+ * @cssprop --aw-input-label-font-size
+ * @cssprop --aw-input-label-font-weight
+ * @cssprop --aw-input-label-margin
+ * @cssprop --aw-input-label-padding
+ * @cssprop --aw-input-label-text-align
+ * @cssprop --aw-input-padding
+ * @cssprop --aw-input-placeholder-color
+ * @cssprop --aw-input-placeholder-font-family
+ * @cssprop --aw-input-placeholder-font-style
+ * @cssprop --aw-input-prefix-color
+ * @cssprop --aw-input-prefix-color-error
+ * @cssprop --aw-input-prefix-color-focused
+ * @cssprop --aw-input-prefix-font-famlily
+ * @cssprop --aw-input-prefix-font-size
+ * @cssprop --aw-input-prefix-font-weight
+ * @cssprop --aw-input-prefix-icon-top
+ * @cssprop --aw-input-prefix-image-height
+ * @cssprop --aw-input-prefix-padding-top
+ * @cssprop --aw-input-prefix-size
+ * @cssprop --aw-input-text-align
+ * @cssprop --aw-input-vertical-align
+ * @cssprop --aw-primary-color
+ */
 class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement ))))) {
 	static get template() {
 		return html`
@@ -76,11 +160,35 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					font-style: var(--aw-input-font-style,normal);
 					text-align: var(--aw-input-text-align, left);
 					box-shadow: var(--aw-input-box-shadow,none);
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
-					-ms-box-sizing: border-box;
 					box-sizing: border-box;
 					transition: all .2s;
+				}
+				:host([size="small"]) {
+					--aw-input-datalist-arrow-top: -23px;
+					--aw-input-datalist-arrow-size: 22px;
+					--aw-input-datalist-option-padding: 8px 7px;
+					--aw-input-datalist-option-font-size: 12px;
+				}
+				.container input[size="small"] {
+					padding: 5px;
+					font-size: 12px;
+					--aw-input-prefix-size: 20px;
+					--aw-input-prefix-font-weight: normal;
+					--aw-input-prefix-icon-top: -1px;
+					--aw-input-prefix-image-height: 14px;
+				}
+				:host([size="big"]) {
+					--aw-input-datalist-arrow-top: -33px;
+					--aw-input-datalist-arrow-size: 26px;
+					--aw-input-datalist-option-padding: 15px 10px;
+					--aw-input-datalist-option-font-size: 16px;
+				}
+				.container input[size="big"] {
+					padding: 11px 9px 10px;
+					font-size: 18px;
+					--aw-input-prefix-size: 24px;
+					--aw-input-prefix-font-weight: normal;
+					--aw-input-prefix-image-height: 18px;
 				}
 				.container input:focus{
                 	outline: 0;
@@ -247,7 +355,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					required$="[[required]]"
 					nospaces$="[[nospaces]]"
 					rangelength$="[[rangelength]]"
-					isumber$="[[isumber]]"
+					isnumber$="[[isnumber]]"
 					range$="[[range]]"
 					isemail$="[[isemail]]"
 					isurl$="[[isurl]]"
@@ -271,6 +379,8 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					on-keyup="_keyup"
 					on-keypress="_keypress"
 					on-change="_change"
+
+					size$=[[size]]
 					/></label>
 
 				<template id="datalist" is="dom-if" if="{{datalist}}">
@@ -282,7 +392,7 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 					<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
 				</div>
 				<div class="right">
-					<aw-char-counter unresolved hidden="{{!countchar}}">{{countCharStr}}</aw-char-counter>
+					<aw-char-counter unresolved hidden$="{{!countchar}}">{{countCharStr}}</aw-char-counter>
 				</div>
 			</div>
 			<slot name="datalist"></slot>
@@ -292,72 +402,171 @@ class AwInputDf extends AwInputErrorMixin( AwInputCharCounterMixin( AwInputPrefi
 	static get properties() {
 		return {
 			// Atributos básicos del input
+			// ............................
 
+			/** Id del input */
 			id: { type: String },
+			/** Nonbre del input */
 			name: { type: String },
+			/**
+			 * Tipo del input
+			 * @type {"text"|"number"|"password"|"email"|"url"|"date"}
+			 */
 			type: { type: String },
+			/** Placeholder del input */
 			placeholder: { type: String },
+			/** Longitud mínima del valor del input */
 			minlength: { type: Number },
+			/** Longitud máxima del valor del input */
 			maxlength: { type: Number },
+			/** Valor mínimo del input (Solo para type=number) */
 			min: { type: Number },
+			/** Valor máximo del input (Solo para type=number) */
 			max: { type: Number },
+			/** Pasos de reducción|incremente del input (Solo pora type=number) */
 			step: { type: String },
+			/** Valor del input */
 			value: { type: String },
-			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
-            disabled: {type: Boolean, value: false, observer: "_set_disabled"},
+			/** Indica si el input es de solo lectura */
+			readonly: {type: Boolean, observer: "_set_readonly"},
+			/** Desactiva el input */
+            disabled: {type: Boolean, observer: "_set_disabled"},
+			/**
+			 * Autocapitaliza el valor del input
+			 * @type {"off"|"none"|"on"|"sentences"|"words"|"characters"}
+			 */
 			autocapitalize: { type: String },
+			/**
+			 * Activa la corrección gramatical del input
+			 * @type {"on"|"off"}
+			 */
 			autocorrect: { type: String },
+			/** Activa el auto completado del input */
 			autocomplete: { type: String },
 
 			// Atributos de diseño
+			// .......................
 
+			/** Etiqueta el input */
 			label: { type: String },
-			noarrows: { type: Boolean, value: false },
-			autofocus: { type: Boolean, value: false },
-			selectonfocus: { type: Boolean, value: false },
-			spinners: { type: Boolean, value: false },
+			/** Enfoca el componente al cargar */
+			autofocus: { type: Boolean },
+			/** Selecciona todo el texto al hacer focus */
+			selectonfocus: { type: Boolean },
+			/** Activa los spinners (Solo para type=number) */
+			spinners: { type: Boolean },
+			/** ID del datalist element */
+			list: { type: String },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
+
+			// Relación con el aw-form
+			// ..........................
+
+			/** Evita que se registre en el formulario */
+			noregister: { type: Boolean },
 
 			// Atrtibutos de validación
+			// ..........................
 
-			required: { type: Boolean, value: false },
-			nospaces: { type: String },
-			rangelength: { type: String },
-			isumber: { type: Boolean, value: false },
-			range: { type: String },
-			isemail: { type: Boolean, value: false },
-			isurl: { type: Boolean, value: false },
-			domains: { type: String },
+			/** Indica que este campo es obligatorio */
+			required: { type: Boolean },
+			/** No permite espacios en el valor */
+			nospaces: { type: Boolean },
+			/**
+			 * Rango de longitud que tiene que tener el valor del input
+			 * @type {number[]}
+			 */
+			rangelength: { type: Array },
+			/** Valida que el valor sea un número */
+			isnumber: { type: Boolean },
+			/**
+			 * Rango de cifras entre lo que tiene que estar el valor
+			 * @type {number[]}
+			 */
+			range: { type: Array },
+			/** Valida que valor sea un email */
+			isemail: { type: Boolean },
+			/** Valida que el valor sea una URL */
+			isurl: { type: Boolean },
+			/**
+			 * Lista de dominios permitidos
+			 * @type {string[]}
+			 */
+			domains: { type: Array },
+			/**
+			 * Formato que debe tener el valor del input
+			 * @type {"aaaa-mm-dd"|"dd-mm-aaaa"|"mm-dd-aaaa"}
+			 */
 			isdate: { type: String },
-			dateprevius: { type: Boolean, value: false },
-			minage: { type: String },
-			maxage: { type: String },
+			/** Valida que el valor sea una fecha anterior a la actual */
+			dateprevius: { type: Boolean },
+			/** Valida que tenga un mínumo de edad (Solo type=date) */
+			minage: { type: Number },
+			/** Valida que tenga un máximo de edad (Solo type=date) */
+			maxage: { type: Number },
+			/**
+			 * Grado de seguridad que tiene que tener el valor
+			 * @type {"low"|"medium"|"hight"|"ultra"}
+			 */
 			security: { type: String },
+			/** Indica que el valor tiene que coindidir con otro input */
 			equalto: { type: String },
-			phonenumber: { type: Boolean, value: false },
-			phonecountry: { type: String },
+			/** Indica que el valor tiene que ser un número de teléfonno */
+			phonenumber: { type: Boolean },
+			/**
+			 * El pais al que debe pertencer el número
+			 * @type {Array<"es"|"uk"|"it"|"pt"|"fr"|"us">}
+			 */
+			phonecountry: { type: Array },
+			/** Expresión regular que tiene que coincider con el valor */
 			pattern: { type: String },
-			novalidate: { type: Boolean, value: false },
-			validateonchange: { type: Boolean, value: false },
-
-			// Datalist
-
-			list: { type: String },
-			datalist: { type: Object, notify: true },
-			dlvisible: { type: Boolean, value: false, notify: true },
-			observDl: { type: Object },
-
-			// Relación con el aw-form y el form
-
-			parentForm: { type: Object },
-			noregister: { type: Boolean, value: false }
+			/** Indica que el campo no debe ser validado */
+			novalidate: { type: Boolean },
+			/** Indica que el campo debe ser validado al cambiar */
+			validateonchange: { type: Boolean },			
 		};
 	}
 
 	constructor() {
 		super();
 
+		this.id = undefined;
+		this.name = undefined;
+		this.type = undefined;
+		this.placeholder = undefined;
+		this.minlength = undefined;
+		this.maxlength = undefined;
+		this.min = undefined;
+		this.step = undefined;
+		this.value = undefined;
+		this.readonly = false;
+		this.disabled = false;
+		this.autocapitalize = undefined;
+		this.autocorrect = undefined;
+		this.autocomplete = undefined;
+		this.label = undefined;
+		this.size = undefined;
+		this.autofocus = false;
+		this.selectonfocus = false;
+		this.spinners = false;
+		this.list = undefined;
+		this.noregister = false;
+
 		/** @type {HTMLInputElement} */
 		this.inputElement = undefined;
+
+		/** @type {AwForm} */
+		this.parentForm = undefined;
+
+		/** @type {HTMLDataListElement} */
+		this.datalist = undefined;
+		/** @type {MutationObserver} */
+		this.observDl = undefined;
+		this.dlvisible = false;
 	}
 
 	/**

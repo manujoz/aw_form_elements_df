@@ -8,6 +8,24 @@ import "./helpers/aw-input-popup-calendar.js";
 import "../aw_form_helpers/aw-input-error.js";
 import "../aw_polymer_3/iron-icons/iron-icons.js";
 
+/**
+ * Componente de fecha
+ * 
+ * @attr {Boolean} error
+ * @attr {String} errmsg
+ * @attr {Boolean} noerrors
+ * @attr {String} connectedfunc
+ * @attr {String} changefunc
+ * @attr {String} focusinfunc
+ * @attr {String} focusoutfunc
+ * @cssprop --aw-primary-color
+ * @cssprop --aw-error-color
+ * @cssprop --aw-input-date-calendar-icon-fill-hover
+ * @cssprop --aw-input-date-calendar-selected-color
+ * @cssprop --aw-input-date-calendar-selected-background-color
+ * @cssprop --aw-input-date-calendar-tit-color
+ * @cssprop --aw-input-date-calendar-tit-background-color
+ */
 class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunctionsMixin( AwFormValidateMixin( PolymerElement )))) {
 	static get template() {
 		return html`
@@ -80,11 +98,23 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 					font-weight: var(--aw-input-font-weight,normal);
 					font-style: var(--aw-input-font-style,normal);
 					box-shadow: var(--aw-input-box-shadow,none);
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
-					-ms-box-sizing: border-box;
 					box-sizing: border-box;
 					transition: all .2s;
+				}
+				.container input[size="small"] {
+					padding: 5px;
+					font-size: 12px;
+					--aw-input-prefix-size: 20px;
+					--aw-input-prefix-font-weight: normal;
+					--aw-input-prefix-icon-top: -1px;
+					--aw-input-prefix-image-height: 14px;
+				}
+				.container input[size="big"] {
+					padding: 11px 9px 10px;
+					font-size: 18px;
+					--aw-input-prefix-size: 24px;
+					--aw-input-prefix-font-weight: normal;
+					--aw-input-prefix-image-height: 18px;
 				}
 				.container input:focus{
                 	outline: 0;
@@ -245,7 +275,7 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 			</style>
 			<div id="label" hidden="{{!label}}">{{label}}</div>
 			<div id="container" class="container">
-				<label><input readonly autocomplete="off" placeholder="[[placeholder]]" on-focusin="_focusin" on-focusout="_focusout"/></label>
+				<label><input readonly autocomplete="off" placeholder="[[placeholder]]" size$=[[size]] on-focusin="_focusin" on-focusout="_focusout"/></label>
 				<iron-icon id="clear" icon="clear" on-click="clear"></iron-icon>
 			</div>
 			<aw-input-error errmsg="{{errmsg}}">{{errmsg}}</aw-input-error>
@@ -281,62 +311,153 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 
 	static get properties() {
 		return {
-			// Atributos del calendario
-			lang: { type: String, value: "es" },
-			titcalendar: { type: String, value: "Selecciona una fecha" },
-			time: { type: Boolean, value: false },
-			nomarktoday: { type: Boolean, value: false },
-			nomarkfest: { type: Boolean, value: false },
-			noselectpast: { type: Boolean, value: false },
-			noselectsat: { type: Boolean, value: false },
-			noselectsun: { type: Boolean, value: false },
-			noselectfest: { type: Boolean, value: false },
-			ccaa: { type: String, value: "" },
-			diasfest: { type: Array, value: "" },
-
 			// Atributos básicos del input
+			// ..........................
+
+			/** ID del componente */
 			id: { type: String },
+			/** Nombre del componente */
 			name: { type: String },
+			/** Placeholder del componente */
 			placeholder: { type: String },
+			/** Valor del componente */
 			value: { type: String, observer: "_handleValue" },
-			readonly: {type: Boolean, value: false, observer: "_set_readonly"},
-            disabled: {type: Boolean, value: false, observer: "_set_disabled"},
+			/** El componente es de solo lectura */
+			readonly: {type: Boolean, observer: "_set_readonly"},
+			/** El componente está desactiado */
+            disabled: {type: Boolean, observer: "_set_disabled"},
+			/**
+			 * Autocapitaliza el valor del input
+			 * @type {"off"|"none"|"on"|"sentences"|"words"|"characters"}
+			 */
 			autocapitalize: { type: String },
+			/**
+			 * Autocapitaliza el valor del input
+			 * @type {"off"|"none"|"on"|"sentences"|"words"|"characters"}
+			 */
 			autocorrect: { type: String },
+			/** Activa el auto completado del input */
 			autocomplete: { type: String },
+			
+			// Atributos del calendario
+			// ..........................
+
+			/** 
+			 * Idioma del componente 
+			 * @type {"es"|"en"|"ca"|"fr"}
+			 */
+			lang: { type: String },
+			/** Título del calendario */
+			titcalendar: { type: String },
+			/** Hora del calendario */
+			time: { type: Boolean },
+			/** No se marcará el doa actual */
+			nomarktoday: { type: Boolean },
+			/** No se marcarán los festivos */
+			nomarkfest: { type: Boolean },
+			/** No se podrán seleccionar fechas pasadas */
+			noselectpast: { type: Boolean },
+			/** No se podrá selecionar el sábado */
+			noselectsat: { type: Boolean },
+			/** No se podrá seleccionar el domingo */
+			noselectsun: { type: Boolean },
+			/** No se podrá seleccionar los festivos */
+			noselectfest: { type: Boolean },
+			/**
+			 * Comunidad autónoma
+			 * @type {"andalucia"|"aragon"|"asturias"|"baleares"|"canarias"|"cantabria"|"castilla"|"cataluña"|"ceuta"|"extremadura"|"galicia"|"madrid"|"mancha"|"melilla"|"murcia"|"navarra"|"rioja"|"valencia"|"vascongadas"}
+			 */
+			ccaa: { type: String },
+			/** Array con los días festivos NOTE: Estudiar que pasar */
+			diasfest: { type: Array },
 
 			// Atributos de diseño
+			// ..........................
+
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
+			/** Etiqueta del componente */
 			label: { type: String },
-			autofocus: { type: Boolean, value: false },
-			formatdate: { type: String, value: "numeric" }, // (numeric,numericHour,long,longDay,longFull,longHour,short,shortDay,shortFull,shortHour)
+			/** Se hará focus al cargar */
+			autofocus: { type: Boolean },
+			/**
+			 * Formato en que se mostrará la fecha
+			 * @type {"numeric"|"numericHour"|"long"|"longDay"|"longFull"|"longHour"|"short"|"shortDay"|"shortFull"|"shortHour"}
+			 */
+			formatdate: { type: String },
 
 			// Atrtibutos de validación
-			required: { type: Boolean, value: false },
+			// ..........................
+
+			/** Indica que este campo es obligatorio */
+			required: { type: Boolean },
+			/**
+			 * Formato que debe tener el valor del input
+			 * @type {"aaaa-mm-dd"|"dd-mm-aaaa"|"mm-dd-aaaa"}
+			 */
 			isdate: { type: String },
-			dateprevius: { type: Boolean, value: false },
-			minage: { type: String },
-			maxage: { type: String },
-			novalidate: { type: Boolean, value: false },
-			validateonchange: { type: Boolean, value: false },
+			/** Valida que el valor sea una fecha anterior a la actual */
+			dateprevius: { type: Boolean },
+			/** Valida que tenga un mínumo de edad (Solo type=date) */
+			minage: { type: Number },
+			/** Valida que tenga un máximo de edad (Solo type=date) */
+			maxage: { type: Number },
+			/** Indica que el campo no debe ser validado */
+			novalidate: { type: Boolean },
+			/** Indica que el campo debe ser validado al cambiar */
+			validateonchange: { type: Boolean },	
 
-			_open: { type: Boolean, value: false },
+			// Relación con el aw-form
+			// ..........................
 
-			// Relación con el aw-form y el form
-			parentForm: { type: Object },
-			noregister: { type: Boolean, value: false },
+			/** Evita que se registre en el formulario */
+			noregister: { type: Boolean },
 		};
 	}
 
 	constructor() {
 		super();
 
+		this.id = undefined;
+		this.name = undefined;
+		this.placeholder = undefined;
+		this.value = undefined;
+		this.readonly = false;
+		this.disabled = false;
+		this.autocapitalize = undefined;
+		this.autocorrect = undefined;
+		this.autocomplete = undefined;
+		this.lang = "es";
+		this.titcalendar = "Selecciona una fecha";
+		this.time = false;
+		this.nomarktoday = false;
+		this.nomarkfest = false;
+		this.noselectpast = false;
+		this.noselectsat = false;
+		this.noselectsun = false;
+		this.noselectfest = false;
+		this.ccaa = "";
+		this.diasfest = "";
+		this.label = undefined;
+		this.autofocus = false;
+		this.size = undefined;
+		/** @type {formatDate} */
+		this.formatdate = "numeric";
+
+		// Propiedades privadas
+
+		this.valueInit = "";
+		this._open = false;
+
 		/** @type {HTMLInputElement} */
 		this.inputElement = undefined;
 		/** @type {HTMLInputElement} */
 		this.inputVisible = undefined;
-
-		this.value = undefined;
-		this.valueInit = "";
+		/** @type {AwForm} */
+		this.parentForm = undefined;
 
 		// Funciones de escucha
 		this.listenFuncs = {};
