@@ -1,13 +1,40 @@
+
 import { PolymerElement, html, Polymer } 	from "../aw_polymer_3/polymer/polymer-element.js";
 import { AwFormValidateMixin } 				from "../aw_form_mixins/aw-form-validate-mixin.js";
 import { AwExternsFunctionsMixin } 			from "../aw_extern_functions/aw-extern-functions-mixin.js";
 import { AwInputErrorMixin } 				from "../aw_form_mixins/aw-input-error-mixin.js";
 
-import "./helpers/aw-select-options.js";
 import "../aw_polymer_3/iron-icons/iron-icons.js";
 import "../aw_polymer_3/paper-ripple/paper-ripple.js";
 import "../aw_form_helpers/aw-input-error.js";
+import "./helpers/aw-select-options.js";
 
+/**
+ * Componente de select
+ * 
+ * @attr {Boolean} error
+ * @attr {String} errmsg
+ * @attr {Boolean} noerrors
+ * @attr {String} connectedfunc
+ * @attr {String} changefunc
+ * @cssprop --aw-error-color
+ * @cssprop --aw-primary-color
+ * @cssprop --aw-select-arrow-color
+ * @cssprop --aw-select-arrow-top
+ * @cssprop --aw-select-icon-margin-top
+ * @cssprop --aw-select-options-color
+ * @cssprop --aw-select-options-icon-right
+ * @cssprop --aw-select-options-icon-top
+ * @cssprop --aw-select-options-icon-width
+ * @cssprop --aw-select-options-image-right
+ * @cssprop --aw-select-options-image-top
+ * @cssprop --aw-select-options-image-width
+ * @cssprop --aw-select-visible-icon-margin-right
+ * @cssprop --aw-select-visible-icon-width
+ * @cssprop --aw-select-visible-image-margin-right
+ * @cssprop --aw-select-visible-image-margin-top
+ * @cssprop --aw-select-visible-image-width
+ */
 class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunctionsMixin ( PolymerElement ))) {
 	static get template() {
 		return html`
@@ -20,6 +47,9 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				font-family: var(--aw-input-font-family);
 				vertical-align: var(--aw-input-vertical-align, middle);
 				display: inline-block;
+			}
+			:host([fullwidth]) {
+				width: 100%;
 			}
 
 			/* #region Etiqueta del input */
@@ -108,6 +138,34 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 				border: var(--aw-input-border-disabled,solid 1px #DDDDDD);
 				background-color: var(--aw-input-background-color-disabled,#F9F9F9);
 			}
+			.container .input_visible[size="small"] {
+				padding: 5px;
+				font-size: 12px;
+			}
+			.container .input_visible[size="small"] > img {
+                width: 13px;
+                height: 13px;
+                margin-top: 0px;
+			}
+			.container .input_visible[size="small"] > iron-icon {
+                width: 13px;
+                height: 13px;
+                margin-top: 0px;
+			}
+			.container .input_visible[size="big"] {
+				padding: 11px 9px 10px;
+				font-size: 18px;
+			}
+			.container .input_visible[size="big"] > img {
+                width: 26px;
+                height: 26px;
+                margin-top: 0;
+			}
+			.container .input_visible[size="big"] > iron-icon {
+                width: 26px;
+                height: 26px;
+                margin-top: 0;
+			}
 
 			/* #region Icono del select */
 
@@ -147,7 +205,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 
 		<div id="container" class="container">
 			<label><input class="ghost" readonly on-focusin="_open" /></label>
-			<div class="input_visible"disabled$="[[disabled]]"></div>
+			<div class="input_visible" disabled$="[[disabled]]" size$=[[size]]></div>
 			<iron-icon icon="arrow-drop-down"></iron-icon>
 			<div class="cover" on-click="_open"></div>
 
@@ -169,56 +227,142 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
                 novalidate$=[[novalidate]]
 				/>
 		</div>
-		<aw-select-options class$="{{classOptions}}" searchable="{{searchable}}" options="{{options}}" open="{{open}}"></aw-select-options>
+		<aw-select-options class$="[[classOptions]]" size="[[size]]" searchable="{{searchable}}" options="{{options}}" open="{{open}}"></aw-select-options>
 		`;
 	}
 
 	static get properties() {
 		return {
-			inputElement: { type: Object },
-			inputVisible: { type: Object },
-
 			// Atributos básicos del input
+			// ..........................
+
+			/**
+			 * Id del input
+			 */
 			id: { type: String },
+			/**
+			 * Nombre del input
+			 */
 			name: { type: String },
-			autocomplete: { type: String, value: "off" },
-			value: { type: String, value: "" },
-			disabled: {type: Boolean, value: false, observer: "_set_disabled"},
+			/**
+			 * Activa el auto completado del input
+			 */
+			autocomplete: { type: String },
+			/**
+			 * Pone el select desactivado
+			 */
+			disabled: {type: Boolean, observer: "_set_disabled"},
 
 			// Atributos de diseño
+			// ..........................
+
+			/**
+			 * Etiqueta del select
+			 */
 			label: { type: String },
+			/**
+			 * Nombre de la clase de las opciones, esta clase ha de estar disponible en el ámbito global
+			 */
 			classOptions: { type: String },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
+			/** Pone el botón en ancho completo */
+			fullwidth: { type: Boolean, reflectToAttribute: true },
 
 			// Atributos especiales del aw-select
-			noink: { type: Boolean, value: false },
-			autofocus: { type: Boolean, value: false },
-			searchable: { type: Boolean, value: false },
-			noink: { type: Boolean, value: false },
-			selectedindex: { type: Number, value: 0, observer: "_handleSelectedIndex" },
-			selectedvalue: { type: String, value: "", observer: "_handleSelectedValue" },
+			// ..........................
+
+			/**
+			 * Evita el efecto Ripple en el select
+			 */
+			noink: { type: Boolean },
+			/**
+			 * Hace focus sobre el select al cargar
+			 */
+			autofocus: { type: Boolean },
+			/**
+			 * Hace que el select tenga un campo de búsqueda
+			 */
+			searchable: { type: Boolean },
+			/**
+			 * Selecciona una opción por su índice
+			 */
+			selectedindex: { type: Number, observer: "_handleSelectedIndex" },
+			/**
+			 * Selecciona una opción por su valor
+			 */
+			selectedvalue: { type: String, observer: "_handleSelectedValue" },
 
 			// Atributos de funcionamiento
-			open: { type: Boolean, value: false, observer: "_handleOpen" },
+			// ..........................
+			
+			/**
+			 * Abre las opciones
+			 */
+			open: { type: Boolean, observer: "_handleOpen" },
 
 			// Atributos de validación
-			required: { type: Boolean, value: false },
-			novalidate: { type: Boolean, value: false },
-			validateonchange: { type: Boolean, value: false },
+			// ..........................
+			
+			/**
+			 * Indica que este campo es obligatorio
+			 */
+			required: { type: Boolean },
+			/**
+			 * Indica que el campo no debe ser validado
+			 */
+			novalidate: { type: Boolean },
+			/**
+			 * Indica que el campo debe ser validado al cambiar
+			 */
+			validateonchange: { type: Boolean },
 
-			// Relación con el aw-form y el form
-			parentForm: { type: Object },
-			noregister: { type: Boolean, value: false },
+			// Relación con el aw-form
+			// ..........................
+
+			/**
+			 * Evita que se registre en el formulario
+			 */
+			noregister: { type: Boolean },
 		};
 	}
 
 	constructor() {
 		super();
 
-		this.options = [];
-		this.awSelectOptions = null;
+		this.id = undefined;
+		this.name = undefined;
+		this.autocomplete = "off";
+		this.value = undefined;
+		this.disabled = false;
+		this.label = undefined;
+		this.classOptions = undefined;
+		this.noink = false;
+		this.size = undefined;
+		this.autofocus = false;
+		this.searchable = false;
+		this.selectedindex = 0;
+		this.selectedvalue = "";
+		this.open = false;
+		this.noregister = false;
+		this.fullwidth = false;
 
+
+		/** @type {HTMLInputElement} */
+		this.inputElement = undefined;
+		/** @type {HTMLInputElement} */
+		this.inputVisible = undefined;
+		/** @type {optionsObj[]} */
+		this.options = [];
+		/** @type {AwSelectOptions} */
+		this.awSelectOptions = null;
 		/** @type {MutationObserver} */
 		this.observOpts = null;
+		/** @type {AwForm} */
+		this.parentForm = undefined;
 	}
 
 	/**
@@ -247,6 +391,12 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 
 		// Registramos en el formulario.
 		this._register_in_form();
+
+		// Invocamos la función externa connected
+
+		if ( typeof this.connectedfunc === "function" ) {
+			this.connectedfunc( this );
+		}
 
 		// Resolvemos
 		this.removeAttribute( "unresolved" );
@@ -660,3 +810,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 }
 
 window.customElements.define( "aw-select-df", AwSelectDf );
+
+/**
+ * @typedef {{el:HTMLOptionElement,value: string, inner: string, title: string, iron: string, image: string, selected: boolean}} optionsObj
+ */

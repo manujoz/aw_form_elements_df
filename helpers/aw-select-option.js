@@ -50,6 +50,34 @@ class AwSelectOption extends PolymerElement {
 				margin-top: var(--aw-select-options-icon-top,-2px);
 				margin-right: var(--aw-select-options-icon-right,7px);
 			}
+            :host([size="small"]) #option {
+                font-size: 12px;
+                padding: 5px;
+            }
+            :host([size="small"]) #option > img {
+                width: 18px;
+                height: 18px;
+                margin-top: 0px;
+            }
+            :host([size="small"]) #option > iron-icon {
+                width: 18px;
+                height: 18px;
+                margin-top: 0px;
+            }
+            :host([size="big"]) #option {
+                font-size: 18px;
+                padding: 10px;
+            }
+            :host([size="big"]) #option > img {
+                width: 26px;
+                height: 26px;
+                margin-top: 0;
+            }
+            :host([size="big"]) #option > iron-icon {
+                width: 26px;
+                height: 26px;
+                margin-top: 0;
+            }
         </style>
         <div id="option"></div>
         `;
@@ -57,7 +85,12 @@ class AwSelectOption extends PolymerElement {
 
     static get properties() {
         return {
-            option: { type: Object, value: {}, observer: "_handleOption" }
+            option: { type: Object, value: {}, observer: "_handleOption" },
+			/**
+			 * Tamaño del input
+			 * @type {"big"|"small"}
+			 */
+			size: { type: String, reflectToAttribute: true },
         }
     }
 
@@ -96,7 +129,7 @@ class AwSelectOption extends PolymerElement {
             this.option.title ? this.$.option.setAttribute( "title", this.option.title ) : this.$.option.removeAttribute("title");
             this.option.iron ? this.$.option.setAttribute( "data-iron", this.option.iron ) : this.$.option.removeAttribute("iron-icon");
             this.$.option.setAttribute( "value", this.option.value ? this.option.value : "" );
-            this.$.option.innerHTML = `${this.option.image ? `<img src="${this.option.image}" />` : `` }${this.option.iron ? `<iron-icon>${this.option.iron}</iron-icon>` : `` }${this.option.inner}`;
+            this.$.option.innerHTML = `${this.option.image ? `<img src="${this.option.image}" />` : `` }${this.option.iron ? `<iron-icon icon="${this.option.iron}"></iron-icon>` : `` }${this.option.inner}`;
 
             this.removeAttribute("hidden");
         }
