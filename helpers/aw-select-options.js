@@ -596,6 +596,10 @@ class AwSelectOptions extends PolymerElement {
         this._filterReset();
 
         const target = ev.target;
+
+        if(!target) {
+            return;
+        }
         
         if( !this.select ) {
             this.select = this.parentNode.host;

@@ -41,7 +41,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		<style>
 			:host {
 				position: relative;
-				padding: 0 0 10px 0;
+				padding: var(--aw-input-padding-host,0 0 10px 0);
 				margin: 0;
 				width: 180px;
 				font-family: var(--aw-input-font-family);
