@@ -12,6 +12,7 @@ import "../aw_form_helpers/aw-input-datalist.js";
 /**
  * Componente de input
  * 
+ * @slot
  * @slot datalist
  * @attr {Boolean} countchar - Activa el contador de caracteres
  * @attr {Boolean} error

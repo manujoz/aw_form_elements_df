@@ -7,6 +7,7 @@ import { AwExternsFunctionsMixin } 			from "../aw_extern_functions/aw-extern-fun
 /**
  * Componente de textarea
  * 
+ * @slot
  * @attr {Boolean} countchar - Activa el contador de caracteres
  * @attr {Boolean} error
  * @attr {String} errmsg
