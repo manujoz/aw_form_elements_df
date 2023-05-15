@@ -609,7 +609,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 			this.set("selectedvalue", "oa-asd3-ad-v-daq2eqw-");
 		}
 
-		this.set("selectedvalue", value);
+		this.set("selectedvalue", value.toString());
 	}
 
 	/**
@@ -687,24 +687,26 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * Observa el cambio en el selectedindex
 	 */
 	_handleSelectedIndex() {
-		if(this.options.length === 0 || !this.options[this.selectedindex]) {
-			return;
-		}
-
-		for( let i = 0; i < this.options.length; i++ ) {
-			if( this.options[i].selected ) {
-				this.options[i].selected = false;
-				break;
+		setTimeout(() => {
+			if(this.options.length === 0 || !this.options[this.selectedindex]) {
+				return;
 			}
-		}
-
-		if(!this.options[this.selectedindex]) {
-			return;
-		}
-
-		this.setSelected(this.options[this.selectedindex], false);
-		this.options[this.selectedindex].selected = true;
-		this.awSelectOptions.selectByIndex(this.selectedindex);
+	
+			for( let i = 0; i < this.options.length; i++ ) {
+				if( this.options[i].selected ) {
+					this.options[i].selected = false;
+					break;
+				}
+			}
+	
+			if(!this.options[this.selectedindex]) {
+				return;
+			}
+	
+			this.setSelected(this.options[this.selectedindex], false);
+			this.options[this.selectedindex].selected = true;
+			this.awSelectOptions.selectByIndex(this.selectedindex);
+		},10)
 	}
 
 	/**
@@ -713,34 +715,36 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * Observa el cambio en el selectedvalue
 	 */
 	_handleSelectedValue() {
-		if( this.options.length === 0 ) {
-			return;
-		}
-
-		let removedSelected = false;
-		let selectedindex = null;
-		for( let i = 0; i < this.options.length; i++ ) {
-			if( this.options[i].value === this.selectedvalue ) {
-				selectedindex = i;
+		setTimeout(() => {
+			if( this.options.length === 0 ) {
+				return;
 			}
-
-			if( this.options[i].selected ) {
-				this.options[i].selected = false;
-				removedSelected = true;
+			
+			let removedSelected = false;
+			let selectedindex = null;
+			for( let i = 0; i < this.options.length; i++ ) {
+				if( this.options[i].value === this.selectedvalue ) {
+					selectedindex = i;
+				}
+	
+				if( this.options[i].selected ) {
+					this.options[i].selected = false;
+					removedSelected = true;
+				}
+	
+				if( removedSelected && selectedindex !== null ) {
+					break;
+				}
 			}
-
-			if( removedSelected && selectedindex !== null ) {
-				break;
+			
+			if(!this.options[selectedindex]) {
+				return;
 			}
-		}
-
-		if(!this.options[selectedindex]) {
-			return;
-		}
-		
-		this.setSelected(this.options[selectedindex], false);
-		this.options[selectedindex].selected = true;
-		this.awSelectOptions.selectByIndex(selectedindex);
+			
+			this.setSelected(this.options[selectedindex], false);
+			this.options[selectedindex].selected = true;
+			this.awSelectOptions.selectByIndex(selectedindex);
+		}, 10);
 	}
 
 	/**

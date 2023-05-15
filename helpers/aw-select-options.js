@@ -136,7 +136,7 @@ class AwSelectOptions extends PolymerElement {
 
 		// Listener del document y teclado
 		this.listenDoc = (ev) => {
-            if(ev.path[1] === this.shadowRoot.querySelector("#search")) {
+            if(ev.composedPath()[1] === this.shadowRoot.querySelector("#search")) {
                 return false;
             }
 
@@ -360,7 +360,7 @@ class AwSelectOptions extends PolymerElement {
      */
     _handleKeys(ev) {        
         // Paramos si estamos escribiendo sobre el buscador
-        if( ev.path[0] === this.shadowRoot.querySelector("#search input") && ev.key !== "ArrowUp" && ev.key !== "ArrowDown" && ev.key !== "Enter") {
+        if( ev.composedPath()[0] === this.shadowRoot.querySelector("#search input") && ev.key !== "ArrowUp" && ev.key !== "ArrowDown" && ev.key !== "Enter") {
             return;
         }
         
@@ -611,7 +611,7 @@ class AwSelectOptions extends PolymerElement {
 
         setTimeout(() => {
             const selected = this.$.options.querySelector("aw-select-option[selected]");
-            selected.removeAttribute("selected");
+            selected?.removeAttribute("selected");
             if(target.option.value === option.value) {
                 target.setAttribute("selected", "");
             } else {
