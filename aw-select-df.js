@@ -363,6 +363,8 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		this.observOpts = null;
 		/** @type {AwForm} */
 		this.parentForm = undefined;
+
+		this.notify = true;
 	}
 
 	/**
@@ -572,8 +574,9 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * @param	{number} index 	Índice de la opción que queremos seleccionar
 	 * @param	{number} notify	Indica si se debe notificar el cambio enviando el evento
 	 */
-	toIndex(index, notify = false)
-	{
+	toIndex(index, notify = false) {
+		this.notify = notify;
+
 		for( let i = 0; i < this.options.length; i++ ) {
 			if(this.options[i].selected && i === index) {
 				return;
@@ -585,9 +588,6 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		}
 
 		this.set("selectedindex", index);
-		if(notify) {
-			this._change();
-		}
 	}
 
 	/**
@@ -599,6 +599,8 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * @param	{number} notify	Indica si se debe notificar el cambio enviando el evento
 	 */
 	toValue(value, notify = false) {
+		this.notify = notify;
+
 		if(this.inputElement.value === value) {
 			false;
 		}
@@ -608,10 +610,6 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		}
 
 		this.set("selectedvalue", value);
-
-		if(notify) {
-			this._change();
-		}
 	}
 
 	/**
@@ -620,6 +618,10 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 	 * Controla el cambio del valor del campo
 	 */
 	_change() {
+		if(!this.notify) {
+			this.notify = true;
+			return;
+		}
 		// Invocamos la función externa de change change
 		if ( typeof this.changefunc === "function" ) {
 			setTimeout(() => {
@@ -735,7 +737,7 @@ class AwSelectDf extends AwInputErrorMixin( AwFormValidateMixin ( AwExternsFunct
 		if(!this.options[selectedindex]) {
 			return;
 		}
-
+		
 		this.setSelected(this.options[selectedindex], false);
 		this.options[selectedindex].selected = true;
 		this.awSelectOptions.selectByIndex(selectedindex);

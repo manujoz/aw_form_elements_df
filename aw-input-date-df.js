@@ -708,6 +708,10 @@ class AwInputDateDf extends AwInputErrorMixin( AwInputPrefixMixin( AwExternsFunc
 	 * @method _handleValue
 	 */
 	_handleValue() {
+		if(this.inputVisible === undefined) {
+			return;
+		}
+
 		this.$.ppCalendar.calendar.set_date(this.value);
 
 		const date = this.$.ppCalendar.calendar.get_date().format.numericHour;

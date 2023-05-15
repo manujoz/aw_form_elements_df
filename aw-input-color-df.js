@@ -470,6 +470,10 @@ class AwInputColorDf extends AwInputErrorMixin( AwExternsFunctionsMixin( AwFormV
 	 */
 	_change_value()
 	{
+		if(this.inputColor === null) {
+			return;
+		}
+
 		if( this.inputColor.value !== this.value ) {
 			this.inputColor.value = this.value;
 			this._change();
